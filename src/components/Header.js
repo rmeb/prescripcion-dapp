@@ -1,20 +1,21 @@
 import React, {Component} from 'react'
+import {DASHBOARD, CONFIGURATION} from '../utils/Routes'
 import {Link} from 'react-router-dom'
 //import session from '../lib/Session'
 
 export default class Header extends Component {
-  /*navigate = (to) => {
+  navigate = (to) => {
     window.$('#navbarNav').collapse('hide');
     if (to !== this.props.history.location.pathname) {
       this.props.history.push(to)
     }
-  }*/
+  }
 
   render() {
     //let path = this.props.history.location.pathname
     return (
       <nav className="navbar fixed-top navbar-expand-md navbar-dark cs-bg-primary">
-        <Link className="navbar-brand" to="/">Prescripcion</Link>
+        <Link className="navbar-brand" to={DASHBOARD}>Prescripcion</Link>
         <button id="toggler" className="navbar-toggler" type="button" data-toggle="collapse"
           data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
@@ -27,7 +28,7 @@ export default class Header extends Component {
                 <i className="fas fa-user-circle fa-lg"></i> {/*session.get_data().rut*/}
               </a>
               <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                {/*<a className="dropdown-item" onClick={e => this.navigate("/private/settings")}><i className="fas fa-cog"></i> Configuracion</a>*/}
+                <a className="dropdown-item" onClick={e => this.navigate(CONFIGURATION)}><i className="fas fa-cog"></i> Configuracion</a>
                 <div className="dropdown-divider"></div>
                 <a className="dropdown-item" data-toggle="modal" data-target="#exitModal"><i className="fas fa-sign-out-alt"></i> Salir</a>
               </div>

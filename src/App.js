@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {HashRouter as Router, Route, Redirect, Link} from 'react-router-dom'
-import {Dashboard} from './screens'
+import {DASHBOARD, CONFIGURATION, HEADER} from './utils/Routes'
+import {Dashboard, Configuration} from './screens'
 import Header from './components/Header'
 import './App.css';
 
@@ -9,9 +10,10 @@ class App extends Component {
     return (
       <Router>
         <div className="container mb-3">
-          <Header />
+          <Route path={HEADER} component={Header} />
           <div className="cs-body-margin">
-            <Route exact path="/" component={Dashboard}/>
+            <Route exact path={DASHBOARD} component={Dashboard}/>
+            <Route exact path={CONFIGURATION} component={Configuration}/>
           </div>
         </div>
       </Router>
