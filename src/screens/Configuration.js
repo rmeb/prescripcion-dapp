@@ -184,7 +184,7 @@ export default class Configuration extends Component {
             </div>
           </div>
           {!this.state.show ? null :
-            <div class="alert alert-success text-center" role="alert">
+            <div className="alert alert-success text-center" role="alert">
               <strong>Información guardada!</strong>
             </div>
           }
@@ -193,8 +193,4 @@ export default class Configuration extends Component {
       </div>
     )
   }
-}
-
-function inputValid(err) {
-  return 'form-control' + (err.length !== 0 ? ' is-invalid' : '')
 }

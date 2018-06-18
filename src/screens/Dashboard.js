@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Validations from '../utils/Validations'
+const $ = window.$
 
 export default class Dashboard extends Component {
   state = {
@@ -25,6 +27,19 @@ export default class Dashboard extends Component {
   onChange = (e) => {
     let id = e.target.id
     let value = e.target.value
+    let required = e.target.required
+    let validation = e.target.dataset.validation
+
+    if (validation) {
+      if (!Validations[validation](value)) {
+        $('#' + id).addClass('is-invalid')
+        this.setState({valid: required ? false : true})
+      } else {
+        $('#' + id).removeClass('is-invalid')
+        this.setState({valid: true})
+      }
+    }
+
     this.setState({[id]: value})
   }
 
@@ -69,7 +84,8 @@ export default class Dashboard extends Component {
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="document">Documento de identificación</label>
-                      <input type="text" className="form-control" id="document" placeholder="Ingrese el documento de identificación" value={this.state.document} onChange={this.onChange}/>
+                      <input type="text" className="form-control" id="document" value={this.state.document} onChange={this.onChange} data-validation="rut"/>
+                      <div className="invalid-feedback">El rut no es valido.</div>
                     </div>
                   </div>
                   <div className="form-group">
@@ -79,7 +95,8 @@ export default class Dashboard extends Component {
                   <div className="form-row">
                     <div className="form-group col-md-6">
                       <label htmlFor="phone">Telefono</label>
-                      <input type="text" className="form-control" id="phone" placeholder="Ingrese el telefono" value={this.state.phone} onChange={this.onChange}/>
+                      <input type="text" className="form-control" id="phone" placeholder="Ingrese el telefono" value={this.state.phone} onChange={this.onChange} data-validation="numeric"/>
+                      <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="city">Ciudad</label>
@@ -89,11 +106,13 @@ export default class Dashboard extends Component {
                   <div className="form-row">
                     <div className="form-group col-md-6">
                       <label htmlFor="weight">Peso</label>
-                      <input type="text" className="form-control" id="weight" placeholder="Ingrese el peso" value={this.state.weight} onChange={this.onChange}/>
+                      <input type="text" className="form-control" id="weight" placeholder="Ingrese el peso" value={this.state.weight} onChange={this.onChange} data-validation="numeric"/>
+                      <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="size">Talla</label>
-                      <input type="text" className="form-control" id="size" placeholder="Ingrese la talla" value={this.state.size} onChange={this.onChange}/>
+                      <input type="text" className="form-control" id="size" placeholder="Ingrese la talla" value={this.state.size} onChange={this.onChange} data-validation="numeric"/>
+                      <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                   </div>
                 </div>
@@ -217,7 +236,7 @@ class Prescriptions extends Component {
 
   render() {
     return (
-      <div className="modal fade" id="prescipcionModal" tabindex="-1" role="dialog">
+      <div className="modal fade" id="prescipcionModal" tabIndex="-1" role="dialog">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
@@ -255,7 +274,7 @@ class Prescriptions extends Component {
               }
             </div>
             <div className="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancelar</button>
               <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={this.add}>Agregar</button>
             </div>
           </div>
