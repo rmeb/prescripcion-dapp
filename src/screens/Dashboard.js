@@ -33,59 +33,75 @@ export default class Dashboard extends Component {
     this.setState({drugs: [...this.state.drugs, prescription]})
   }
 
+  removeDrug = (index) => {
+    let drugs = [...this.state.drugs]
+    drugs.splice(index, 1)
+    this.setState({drugs})
+  }
+
   render() {
     return (
       <div>
         <h1 className="display-5 mb-4">Emitir prescripción</h1>
         <form onSubmit={this.submit}>
-          <div className="row">
-            <div className="col-md-6">
+          <div className="row mb-3">
+            <div className="col-md-12">
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">Información del paciente</h5>
-                  <div className="form-group">
-                    <label htmlFor="name">Nombre</label>
-                    <input type="text" className="form-control" id="name" placeholder="Ingrese el nombre" value={this.state.name} onChange={this.onChange}/>
+                  <div className="form-row">
+                    <div className="form-group col-md-6">
+                      <label htmlFor="name">Nombre</label>
+                      <input type="text" className="form-control" id="name" placeholder="Ingrese el nombre" value={this.state.name} onChange={this.onChange}/>
+                    </div>
+                    <div className="form-group col-md-6">
+                      <label htmlFor="birthday">Fecha de nacimiento</label>
+                      <input type="text" className="form-control" id="birthday" placeholder="DD/MM/YYYY" value={this.state.birthday} onChange={this.onChange}/>
+                    </div>
                   </div>
-                  <div className="form-group">
-                    <label htmlFor="document_type">Tipo de documento</label>
-                    <select className="form-control" id="document_type" value={this.state.document_type} onChange={this.onChange}>
-                      <option value="RUN">RUN</option>
-                      <option value="PASSPORT">Pasaporte</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="document">Documento de identificación</label>
-                    <input type="text" className="form-control" id="document" placeholder="Ingrese el documento de identificación" value={this.state.document} onChange={this.onChange}/>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="birthday">Fecha de nacimiento</label>
-                    <input type="text" className="form-control" id="birthday" placeholder="DD/MM/YYYY" value={this.state.birthday} onChange={this.onChange}/>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="weight">Peso</label>
-                    <input type="text" className="form-control" id="weight" placeholder="Ingrese el peso" value={this.state.weight} onChange={this.onChange}/>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="size">Talla</label>
-                    <input type="text" className="form-control" id="size" placeholder="Ingrese la talla" value={this.state.size} onChange={this.onChange}/>
+                  <div className="form-row">
+                    <div className="form-group col-md-6">
+                      <label htmlFor="document_type">Tipo de documento</label>
+                      <select className="form-control" id="document_type" value={this.state.document_type} onChange={this.onChange}>
+                        <option value="RUN">RUN</option>
+                        <option value="PASSPORT">Pasaporte</option>
+                      </select>
+                    </div>
+                    <div className="form-group col-md-6">
+                      <label htmlFor="document">Documento de identificación</label>
+                      <input type="text" className="form-control" id="document" placeholder="Ingrese el documento de identificación" value={this.state.document} onChange={this.onChange}/>
+                    </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="address">Dirección</label>
                     <input type="text" className="form-control" id="address" placeholder="Ingrese la dirección" value={this.state.address} onChange={this.onChange}/>
                   </div>
-                  <div className="form-group">
-                    <label htmlFor="city">Ciudad</label>
-                    <input type="text" className="form-control" id="city" placeholder="Ingrese la ciudad" value={this.state.city} onChange={this.onChange}/>
+                  <div className="form-row">
+                    <div className="form-group col-md-6">
+                      <label htmlFor="phone">Telefono</label>
+                      <input type="text" className="form-control" id="phone" placeholder="Ingrese el telefono" value={this.state.phone} onChange={this.onChange}/>
+                    </div>
+                    <div className="form-group col-md-6">
+                      <label htmlFor="city">Ciudad</label>
+                      <input type="text" className="form-control" id="city" placeholder="Ingrese la ciudad" value={this.state.city} onChange={this.onChange}/>
+                    </div>
                   </div>
-                  <div className="form-group">
-                    <label htmlFor="phone">Telefono</label>
-                    <input type="text" className="form-control" id="phone" placeholder="Ingrese el telefono" value={this.state.phone} onChange={this.onChange}/>
+                  <div className="form-row">
+                    <div className="form-group col-md-6">
+                      <label htmlFor="weight">Peso</label>
+                      <input type="text" className="form-control" id="weight" placeholder="Ingrese el peso" value={this.state.weight} onChange={this.onChange}/>
+                    </div>
+                    <div className="form-group col-md-6">
+                      <label htmlFor="size">Talla</label>
+                      <input type="text" className="form-control" id="size" placeholder="Ingrese la talla" value={this.state.size} onChange={this.onChange}/>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="col-md-6">
+          </div>
+          <div className="row mb-3">
+            <div className="col-md-12">
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">Receta</h5>
@@ -103,15 +119,24 @@ export default class Dashboard extends Component {
                   </div>
                 </div>
               </div>
-              <div className="card mt-3">
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-12">
+              <div className="card">
                 <div className="card-body">
-                  <h5 className="card-title">Prescripciones</h5>
-                  <Prescriptions onAdd={this.onAdd} />
+                  <h5 className="card-title">Prescripciones <button className="btn btn-danger" data-toggle="modal" data-target="#prescipcionModal"><i className="far fa-plus"></i></button></h5>
                   <ul className="list-group list-group-flush mt-3">
                     {this.state.drugs.map((d, i) => (
-                      <li key={i} className="list-group-item"><strong>{d.drug.DCI}</strong> {d.dose} {d.drug.FORMA_FARMACEUTICA} cada {d.frequency} horas por {d.length} dias</li>
+                      <li key={i} className="list-group-item">
+                        <strong>{d.drug.DCI}</strong> {d.dose} {d.drug.FORMA_FARMACEUTICA} cada {d.frequency} horas por {d.length} dias
+                        <button type="button" className="close" aria-label="Close" onClick={e => this.removeDrug(i)}>
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </li>
                     ))}
                   </ul>
+                  <Prescriptions onAdd={this.onAdd} />
                 </div>
               </div>
             </div>
@@ -149,14 +174,17 @@ const DRUGS = [{
   DESCRIPCION_PROD_COMERCIAL: 'sentis 37,5 mg cápsula (Lab Chile)'
 }]
 
+const PrescriptionInitialState = {
+  filter: '',
+  drugs: [],
+  drug: null,
+  dose: '',
+  frequency: '',
+  length: ''
+}
+
 class Prescriptions extends Component {
-  state = {
-    filter: '',
-    drug: null,
-    dose: '',
-    frequency: '',
-    length: ''
-  }
+  state = {...PrescriptionInitialState}
 
   add = (e) => {
     e.preventDefault()
@@ -167,60 +195,72 @@ class Prescriptions extends Component {
         frequency: this.state.frequency,
         length: this.state.length
       })
+      this.setState({...PrescriptionInitialState})
     }
+  }
+
+  selectDrug = (index) => {
+    this.setState({drug: this.state.drugs[index]})
   }
 
   searchDrug = (e) => {
     let filter = e.target.value
     let drugs = DRUGS.filter(d => d.DCI.indexOf(filter) !== -1 || d.DESCRIPCION_PROD_COMERCIAL.indexOf(filter) !== -1)
-    this.setState({filter, drug: drugs.length > 0 && filter.length > 0 ? drugs[0] : null})
-    /*if (filter.length !== 0) {
-
-    } else {
-      window.$('#test-drop').dropdown()
-    }
-*/
+    this.setState({filter, drugs: drugs.length > 0 && filter.length > 0 ? drugs.slice(0, 3) : []})
   }
 
   onChange = (e) => {
     let id = e.target.id
     let value = e.target.value
-
     this.setState({[id]: value})
   }
 
   render() {
     return (
-      <div>
-        <input type="text" className="form-control" value={this.state.filter} onChange={this.searchDrug}/>
-        {this.state.drug !== null ? <Search drug={this.state.drug} onClick={() => {}}/> : null}
-        <div className="mt-3">
-          <div className="form-row">
-            <div className="form-group col-md-4">
-              <label htmlFor="dose">Capsulas</label>
-              <input className="form-control" id="dose" value={this.state.dose} onChange={this.onChange}/>
+      <div className="modal fade" id="prescipcionModal" tabindex="-1" role="dialog">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Buscar medicamentos</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-            <div className="form-group col-md-4">
-              <label htmlFor="frequency">Horas</label>
-              <input className="form-control" id="frequency"  value={this.state.frequency} onChange={this.onChange}/>
+            <div className="modal-body">
+              <input type="text" className="form-control" value={this.state.filter} onChange={this.searchDrug}/>
+              <ul className="list-group">
+                {this.state.drugs.map((d, i) => (
+                  <li key={i} className={"list-group-item cs-pointer" + (d === this.state.drug ? ' active' : '')} onClick={() => this.selectDrug(i)}>
+                    {d.DCI}
+                  </li>
+                ))}
+              </ul>
+              {this.state.drug === null ? null :
+                <div className="mt-3">
+                  <div className="form-row">
+                    <div className="form-group col-md-4">
+                      <label htmlFor="dose">{this.state.drug.FORMA_FARMACEUTICA}</label>
+                      <input className="form-control" id="dose" value={this.state.dose} onChange={this.onChange}/>
+                    </div>
+                    <div className="form-group col-md-4">
+                      <label htmlFor="frequency">Horas</label>
+                      <input className="form-control" id="frequency"  value={this.state.frequency} onChange={this.onChange}/>
+                    </div>
+                    <div className="form-group col-md-4">
+                      <label htmlFor="length">Dias</label>
+                      <input className="form-control" id="length"  value={this.state.length} onChange={this.onChange}/>
+                    </div>
+                  </div>
+                </div>
+              }
             </div>
-            <div className="form-group col-md-4">
-              <label htmlFor="length">Dias</label>
-              <input className="form-control" id="length"  value={this.state.length} onChange={this.onChange}/>
+            <div className="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={this.add}>Agregar</button>
             </div>
           </div>
         </div>
-        <button className="btn btn-danger btn-block" onClick={this.add}>Agregar</button>
       </div>
     )
   }
 }
-
-const Search = ({drug, onClick}) => (
-  <div className="card" onClick={onClick}>
-    <div className="card-body">
-      <h5 className="card-title">{drug.DCI}</h5>
-      <h6 className="card-subtitle mb-2 text-muted">{drug.DESCRIPCION_PROD_COMERCIAL}</h6>
-    </div>
-  </div>
-)

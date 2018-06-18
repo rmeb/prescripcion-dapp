@@ -14,7 +14,7 @@ export default class Header extends Component {
     //let path = this.props.history.location.pathname
     return (
       <nav className="navbar fixed-top navbar-expand-md navbar-dark cs-bg-primary">
-        <Link className="navbar-brand" to="/private/dashboard">Prescripcion</Link>
+        <Link className="navbar-brand" to="/">Prescripcion</Link>
         <button id="toggler" className="navbar-toggler" type="button" data-toggle="collapse"
           data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>

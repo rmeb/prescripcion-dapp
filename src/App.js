@@ -8,7 +8,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div className="container">
+        <div className="container mb-3">
           <Header />
           <div className="cs-body-margin">
             <Route exact path="/" component={Dashboard}/>
