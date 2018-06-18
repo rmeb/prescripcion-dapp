@@ -71,7 +71,7 @@ export default class Dashboard extends Component {
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="birthday">Fecha de nacimiento</label>
-                      <input type="text" className="form-control" id="birthday" placeholder="DD/MM/YYYY" value={this.state.birthday} onChange={this.onChange}/>
+                      <input type="date" className="form-control" id="birthday" value={this.state.birthday} onChange={this.onChange}/>
                     </div>
                   </div>
                   <div className="form-row">
