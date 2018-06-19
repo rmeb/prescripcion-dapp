@@ -67,11 +67,11 @@ export default class Dashboard extends Component {
                   <div className="form-row">
                     <div className="form-group col-md-6">
                       <label htmlFor="name">Nombre</label>
-                      <input type="text" className="form-control" id="name" placeholder="Ingrese el nombre" value={this.state.name} onChange={this.onChange}/>
+                      <input type="text" className="form-control" id="name" placeholder="Ingrese el nombre" value={this.state.name} onChange={this.onChange} required/>
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="birthday">Fecha de nacimiento</label>
-                      <input type="date" className="form-control" id="birthday" value={this.state.birthday} onChange={this.onChange}/>
+                      <input type="date" className="form-control" id="birthday" value={this.state.birthday} onChange={this.onChange} required/>
                     </div>
                   </div>
                   <div className="form-row">
@@ -84,34 +84,34 @@ export default class Dashboard extends Component {
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="document">Documento de identificación</label>
-                      <input type="text" className="form-control" id="document" value={this.state.document} onChange={this.onChange} data-validation="rut"/>
+                      <input type="text" className="form-control" id="document" value={this.state.document} onChange={this.onChange} data-validation="rut" required/>
                       <div className="invalid-feedback">El rut no es valido.</div>
                     </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="address">Dirección</label>
-                    <input type="text" className="form-control" id="address" placeholder="Ingrese la dirección" value={this.state.address} onChange={this.onChange}/>
+                    <input type="text" className="form-control" id="address" placeholder="Ingrese la dirección" value={this.state.address} onChange={this.onChange} required/>
                   </div>
                   <div className="form-row">
                     <div className="form-group col-md-6">
                       <label htmlFor="phone">Telefono</label>
-                      <input type="text" className="form-control" id="phone" placeholder="Ingrese el telefono" value={this.state.phone} onChange={this.onChange} data-validation="numeric"/>
+                      <input type="text" className="form-control" id="phone" placeholder="Ingrese el telefono" value={this.state.phone} onChange={this.onChange} data-validation="numeric" required/>
                       <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="city">Ciudad</label>
-                      <input type="text" className="form-control" id="city" placeholder="Ingrese la ciudad" value={this.state.city} onChange={this.onChange}/>
+                      <input type="text" className="form-control" id="city" placeholder="Ingrese la ciudad" value={this.state.city} onChange={this.onChange} required/>
                     </div>
                   </div>
                   <div className="form-row">
                     <div className="form-group col-md-6">
                       <label htmlFor="weight">Peso</label>
-                      <input type="text" className="form-control" id="weight" placeholder="Ingrese el peso" value={this.state.weight} onChange={this.onChange} data-validation="numeric"/>
+                      <input type="text" className="form-control" id="weight" placeholder="Ingrese el peso" value={this.state.weight} onChange={this.onChange} data-validation="numeric" required/>
                       <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="size">Talla</label>
-                      <input type="text" className="form-control" id="size" placeholder="Ingrese la talla" value={this.state.size} onChange={this.onChange} data-validation="numeric"/>
+                      <input type="text" className="form-control" id="size" placeholder="Ingrese la talla" value={this.state.size} onChange={this.onChange} data-validation="numeric" required/>
                       <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                   </div>
@@ -126,15 +126,15 @@ export default class Dashboard extends Component {
                   <h5 className="card-title">Receta</h5>
                   <div className="form-group">
                     <label htmlFor="name">Diagnostico</label>
-                    <textarea className="form-control" id="diagnosis" rows="3" value={this.state.diagnosis} onChange={this.onChange}></textarea>
+                    <textarea className="form-control" id="diagnosis" rows="3" value={this.state.diagnosis} onChange={this.onChange} required></textarea>
                   </div>
                   <div className="form-group">
                     <label htmlFor="pacient_detail">Indicaciones al paciente</label>
-                    <textarea className="form-control" id="pacient_detail" rows="3" value={this.state.pacient_detail} onChange={this.onChange}></textarea>
+                    <textarea className="form-control" id="pacient_detail" rows="3" value={this.state.pacient_detail} onChange={this.onChange} required></textarea>
                   </div>
                   <div className="form-group">
                     <label htmlFor="farma_detail">Indicaciones al farmaceutico</label>
-                    <textarea className="form-control" id="farma_detail" rows="3" value={this.state.farma_detail} onChange={this.onChange}></textarea>
+                    <textarea className="form-control" id="farma_detail" rows="3" value={this.state.farma_detail} onChange={this.onChange} required></textarea>
                   </div>
                 </div>
               </div>

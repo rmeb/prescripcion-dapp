@@ -80,27 +80,27 @@ export default class Configuration extends Component {
                   <div className="form-row">
                     <div className="form-group col-md-6">
                       <label htmlFor="name">Nombre</label>
-                      <input type="text" className="form-control" id="name" placeholder="" value={this.state.name} onChange={this.onChange}/>
+                      <input type="text" className="form-control" id="name" placeholder="" value={this.state.name} onChange={this.onChange} required/>
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="run">RUN</label>
-                      <input type="text" className="form-control" id="run" placeholder="xxxxxxxx-x" value={this.state.run} onChange={this.onChange} data-validation="rut"/>
+                      <input type="text" className="form-control" id="run" placeholder="xxxxxxxx-x" value={this.state.run} onChange={this.onChange} data-validation="rut" required/>
                       <div className="invalid-feedback">El rut no es valido.</div>
                     </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="Profesión">Profesión</label>
-                    <input type="text" className="form-control" id="profession" placeholder="" value={this.state.profession} onChange={this.onChange}/>
+                    <input type="text" className="form-control" id="profession" placeholder="" value={this.state.profession} onChange={this.onChange} required/>
                   </div>
                   <div className="form-row">
                     <div className="form-group col-md-6">
                       <label htmlFor="super_salud">Numero Registro SuperSalud</label>
-                      <input type="text" className="form-control" id="super_salud" placeholder="" value={this.state.super_salud} onChange={this.onChange} data-validation="numeric"/>
+                      <input type="text" className="form-control" id="super_salud" placeholder="" value={this.state.super_salud} onChange={this.onChange} data-validation="numeric" required/>
                       <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="colegio">Numero Registro Colegio</label>
-                      <input type="text" className="form-control" id="colegio" placeholder="" value={this.state.colegio} onChange={this.onChange} data-validation="numeric"/>
+                      <input type="text" className="form-control" id="colegio" placeholder="" value={this.state.colegio} onChange={this.onChange} data-validation="numeric" required/>
                       <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                   </div>
@@ -116,22 +116,22 @@ export default class Configuration extends Component {
                   <div className="form-row">
                     <div className="form-group col-md-6">
                       <label htmlFor="e_name">Nombre</label>
-                      <input type="text" className="form-control" id="e_name" placeholder="Ingrese el nombre" value={this.state.e_name} onChange={this.onChange}/>
+                      <input type="text" className="form-control" id="e_name" placeholder="Ingrese el nombre" value={this.state.e_name} onChange={this.onChange} required/>
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="deis">Codigo Deis</label>
-                      <input type="text" className="form-control" id="deis" placeholder="" value={this.state.deis} onChange={this.onChange}/>
+                      <input type="text" className="form-control" id="deis" placeholder="" value={this.state.deis} onChange={this.onChange} required/>
                     </div>
                   </div>
                   <div className="form-row">
                     <div className="form-group col-md-6">
                       <label htmlFor="phone">Telefono</label>
-                      <input type="text" className="form-control" id="phone" placeholder="" value={this.state.phone} onChange={this.onChange} data-validation="numeric"/>
+                      <input type="text" className="form-control" id="phone" placeholder="" value={this.state.phone} onChange={this.onChange} data-validation="numeric" required/>
                       <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="email">Email</label>
-                      <input type="text" className="form-control" id="email" placeholder="" value={this.state.email} onChange={this.onChange} data-validation="email"/>
+                      <input type="text" className="form-control" id="email" placeholder="" value={this.state.email} onChange={this.onChange} data-validation="email" required/>
                       <div className="invalid-feedback">Debe ser correo electronico valido.</div>
                     </div>
                   </div>
@@ -139,22 +139,22 @@ export default class Configuration extends Component {
                   <div className="form-row">
                     <div className="form-group col-md-6">
                       <label htmlFor="street">Calle</label>
-                      <input type="text" className="form-control" id="street" placeholder="" value={this.state.street} onChange={this.onChange}/>
+                      <input type="text" className="form-control" id="street" placeholder="" value={this.state.street} onChange={this.onChange} required/>
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="street_number">Número</label>
-                      <input type="text" className="form-control" id="street_number" placeholder="" value={this.state.street_number} onChange={this.onChange} data-validation="numeric"/>
+                      <input type="text" className="form-control" id="street_number" placeholder="" value={this.state.street_number} onChange={this.onChange} data-validation="numeric" required/>
                       <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                   </div>
                   <div className="form-row">
                     <div className="form-group col-md-6">
                       <label htmlFor="depto">Departamento</label>
-                      <input type="text" className="form-control" id="depto" placeholder="" value={this.state.depto} onChange={this.onChange}/>
+                      <input type="text" className="form-control" id="depto" placeholder="" value={this.state.depto} onChange={this.onChange} required/>
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="comuna">Comuna</label>
-                      <input type="text" className="form-control" id="comuna" placeholder="" value={this.state.comuna} onChange={this.onChange}/>
+                      <input type="text" className="form-control" id="comuna" placeholder="" value={this.state.comuna} onChange={this.onChange} required/>
                     </div>
                   </div>
                 </div>
@@ -172,11 +172,11 @@ export default class Configuration extends Component {
                   </div>
                   <div className="form-group">
                     <label htmlFor="password">Clave de firma</label>
-                    <input type="password" className="form-control" id="password" value={this.state.password} onChange={this.onChange}/>
+                    <input type="password" className="form-control" id="password" value={this.state.password} onChange={this.onChange} required/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="repassword">Re-ingrese clave de firma</label>
-                    <input type="password" className="form-control" id="repassword" value={this.state.repassword} onChange={this.onChange} data-validation="numeric"/>
+                    <input type="password" className="form-control" id="repassword" value={this.state.repassword} onChange={this.onChange} required/>
                     <div className="invalid-feedback">Las claves deben ser iguales.</div>
                   </div>
                 </div>
