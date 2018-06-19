@@ -31,6 +31,7 @@ export default class Dashboard extends Component {
     let validation = e.target.dataset.validation
 
     if (validation) {
+      console.log(validation)
       if (!Validations[validation](value)) {
         $('#' + id).addClass('is-invalid')
         this.setState({valid: required ? false : true})
@@ -84,7 +85,7 @@ export default class Dashboard extends Component {
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="document">Documento de identificación</label>
-                      <input type="text" className="form-control" id="document" value={this.state.document} onChange={this.onChange} data-validation="rut" required/>
+                      <input type="text" className="form-control" id="document" value={this.state.document} onChange={this.onChange} data-validation={this.state.document_type === 'RUN' ? 'rut' : ''} required/>
                       <div className="invalid-feedback">El rut no es valido.</div>
                     </div>
                   </div>
