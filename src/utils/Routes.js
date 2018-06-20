@@ -1,3 +1,5 @@
-export const DASHBOARD = '/'
-export const HEADER = '/'
-export const CONFIGURATION = '/configuration'
+export const DASHBOARD = '/private/dashboard'
+export const HEADER = '/private'
+export const CONFIGURATION = '/private/configuration'
+export const LOGIN = '/'
+export const CREATE_ACCOUNT = '/account'
