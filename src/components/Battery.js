@@ -5,7 +5,6 @@ import {refund} from '../lib/Api'
 
 const WEIMAX = 10000000000000000
 
-//TODO refrescar cada x segundos
 export default class Baterry extends Component {
   state = {
     network: '',
@@ -38,12 +37,11 @@ export default class Baterry extends Component {
     e.preventDefault()
     window.$('#refundModal').modal('toggle')
     let account = get_accounts()[0]
+    this.setState({recharging: true})
     refund(account).then(data => {
       console.log(data)
-      this.setState({recharging: true})
       let timer = setInterval(() => {
         getTransaction(data.txHash).then(tx => {
-          console.log('getTx', tx)
           if (tx.blockNumber !== null) {
             this.setState({recharging: false})
             clearInterval(timer)
@@ -55,6 +53,7 @@ export default class Baterry extends Component {
       }, 15000)
     }).catch(e => {
       console.error('[recharge]', e)
+      this.setState({recharging: false})
     })
   }
 
@@ -64,7 +63,7 @@ export default class Baterry extends Component {
         <span className="mr-2">{this.state.network}</span>
         {this.state.recharging ?
           <i className="fas fa-battery-bolt fa-2x"/>:
-          <a data-toggle="modal" data-target="#refundModal">
+          <a className="cs-pointer" data-toggle="modal" data-target="#refundModal">
             <i className={"fas fa-2x fa-battery-" + batteryLevel(this.state.balance / WEIMAX)} />
           </a>
         }

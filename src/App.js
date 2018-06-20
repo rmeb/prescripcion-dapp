@@ -3,6 +3,7 @@ import {HashRouter as Router, Route, Redirect, Link} from 'react-router-dom'
 import {DASHBOARD, CONFIGURATION, HEADER, LOGIN, CREATE_ACCOUNT} from './utils/Routes'
 import {Dashboard, Configuration, Login, CreateAccount} from './screens'
 import Header from './components/Header'
+import Battery from './components/Battery'
 import './App.css';
 
 import session from './lib/Session'
@@ -21,6 +22,7 @@ class App extends Component {
           <Route exact path={CREATE_ACCOUNT} component={CreateAccount}/>
           <PrivateRoute path={HEADER} component={Header} />
           <div className="cs-body-margin">
+            <PrivateRoute path="/private" component={BatteryPanel}/>
             <PrivateRoute exact path={DASHBOARD} component={Dashboard}/>
             <PrivateRoute exact path={CONFIGURATION} component={Configuration}/>
           </div>
@@ -39,6 +41,14 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
     )
   }/>
 );
+
+const BatteryPanel = ({balance, network}) => (
+  <div className="row mb-3 justify-content-end">
+    <div className="col-sm-12">
+      <Battery balance={balance} version={network}/>
+    </div>
+  </div>
+)
 
 const ExitModal = ({onClick}) => (
   <div className="modal fade" id="exitModal" tabIndex="-1" role="dialog">
