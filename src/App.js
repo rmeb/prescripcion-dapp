@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {HashRouter as Router, Route, Redirect, Link} from 'react-router-dom'
-import {DASHBOARD, CONFIGURATION, HEADER, LOGIN, CREATE_ACCOUNT} from './utils/Routes'
-import {Dashboard, Configuration, Login, CreateAccount} from './screens'
+import {DASHBOARD, CONFIGURATION, HEADER, LOGIN, CREATE_ACCOUNT, SETTINGS} from './utils/Routes'
+import {Dashboard, Configuration, Login, CreateAccount, Settings} from './screens'
 import Header from './components/Header'
 import Battery from './components/Battery'
 import './App.css';
@@ -25,6 +25,7 @@ class App extends Component {
             <PrivateRoute path="/private" component={BatteryPanel}/>
             <PrivateRoute exact path={DASHBOARD} component={Dashboard}/>
             <PrivateRoute exact path={CONFIGURATION} component={Configuration}/>
+            <PrivateRoute exact path={SETTINGS} component={Settings}/>
           </div>
           <ExitModal onClick={this.logout}/>
         </div>
