@@ -26,7 +26,7 @@ it('generate xml', () => {
       profession: 'Curandero',
       super_salud: '334a34',
       colegio: 'ff3kmd',
-    }
+    },
     paciente: {
       name: 'Matilde',
       document_type: 'RUN',
@@ -37,7 +37,18 @@ it('generate xml', () => {
       address: 'Palisade 343',
       city: 'Vice City',
       phone: '393483382'
-    }
+    },
+    prescriptions: [{
+      code: '123',
+      dose: '3',
+      frequency: '8',
+      length: '7'
+    }],
+    diagnosis:'',
+    timestamp: 0,
+    pacient_detail: 'indicaciones al paciente',
+    farma_detail: 'indicaciones al farmaceutico',
+    contract: '0x0'
   }
   let xml = generateXML(object)
   console.log(xml)
