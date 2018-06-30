@@ -12,7 +12,7 @@ export default class Configuration extends Component {
     profession: '',
     super_salud: '',
     colegio: '',
-    e_name: '',
+    worker_name: '',
     deis: '',
     phone: '',
     email: '',
@@ -115,8 +115,8 @@ export default class Configuration extends Component {
                   <h5 className="card-title">Establecimiento Salud</h5>
                   <div className="form-row">
                     <div className="form-group col-md-6">
-                      <label htmlFor="e_name">Nombre</label>
-                      <input type="text" className="form-control" id="e_name" placeholder="Ingrese el nombre" value={this.state.e_name} onChange={this.onChange} required/>
+                      <label htmlFor="worker_name">Nombre</label>
+                      <input type="text" className="form-control" id="worker_name" placeholder="Ingrese el nombre" value={this.state.worker_name} onChange={this.onChange} required/>
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="deis">Codigo Deis</label>

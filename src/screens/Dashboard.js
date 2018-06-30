@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Validations from '../utils/Validations'
+import {sign} from '../lib/SignService'
+
 const $ = window.$
 
 export default class Dashboard extends Component {
@@ -21,7 +23,10 @@ export default class Dashboard extends Component {
 
   submit = (e) => {
     e.preventDefault()
-    console.log(this.state)
+    let data = {
+      ...this.state
+    }
+    sign(data).then(console.log)
   }
 
   onChange = (e) => {
