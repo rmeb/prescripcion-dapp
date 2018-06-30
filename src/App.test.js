@@ -15,6 +15,7 @@ it('generate xml', () => {
       name: 'Clinica matazanos',
       deis: 'A45',
       phone: '278346372',
+      email: 'a@b.c',
       street: 'bilbao',
       street_number: '8076',
       depto: '453',
@@ -44,7 +45,7 @@ it('generate xml', () => {
       frequency: '8',
       length: '7'
     }],
-    diagnosis:'',
+    diagnosis:'cataratas',
     timestamp: 0,
     pacient_detail: 'indicaciones al paciente',
     farma_detail: 'indicaciones al farmaceutico',
