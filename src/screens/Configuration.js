@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Validations from '../utils/Validations'
+import config from '../lib/Config'
 
 const KEY = 'prescription-dapp-config'
 const storage = window.localStorage
@@ -27,12 +28,24 @@ export default class Configuration extends Component {
   }
 
   componentDidMount() {
-    let config = JSON.parse(storage.getItem(KEY))
-    if (config !== null) {
+    //let config = JSON.parse(storage.getItem(KEY))
+    let data = config.data
+    if (data !== null) {
+      let {establecimiento, profesional} = data
       this.setState({
-        name: config.name,
-        run: config.run,
-        profession: config.profession
+        name: establecimiento.name,
+        deis: establecimiento.deis,
+        phone: establecimiento.phone,
+        email: establecimiento.email,
+        street: establecimiento.street,
+        street_number: establecimiento.street_number,
+        depto: establecimiento.depto,
+        comuna: establecimiento.comuna,
+        worker_name: profesional.name,
+        run: profesional.run,
+        profession: profesional.profession,
+        super_salud: profesional.super_salud,
+        colegio: profesional.colegio
       })
     }
   }
@@ -40,11 +53,25 @@ export default class Configuration extends Component {
   submit = (e) => {
     e.preventDefault()
     console.log(this.state)
-    storage.setItem(KEY, JSON.stringify({
-      name: this.state.name,
-      run: this.state.run,
-      profession: this.state.profession
-    }))
+    config.saveConfig({
+      establecimiento: {
+        name: this.state.name,
+        deis: this.state.deis,
+        phone: this.state.phone,
+        email: this.state.email,
+        street: this.state.street,
+        street_number: this.state.street_number,
+        depto: this.state.depto,
+        comuna: this.state.comuna
+      },
+      profesional: {
+        name: this.state.worker_name,
+        run: this.state.run,
+        profession: this.state.profession,
+        super_salud: this.state.super_salud,
+        colegio: this.state.colegio
+      }
+    })
     this.setState({show: true})
   }
 

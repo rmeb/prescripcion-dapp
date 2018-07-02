@@ -30,8 +30,8 @@ export function generateXML(object) {
   xml = xml.replace('{TELEFONO_PACIENTE}', paciente.phone)
 
   //PRESCRIPCIONES
+  let str = ''
   if (prescriptions.length > 0) {
-    let str = ''
     for (let i = 0; i < prescriptions.length; i++) {
       let p = prescriptions[i]
       let xml_prescription = XML_PRESCRIPTION.replace('{CODIGO_MEDICAMENTO}', p.code)
@@ -40,11 +40,11 @@ export function generateXML(object) {
       xml_prescription = xml_prescription.replace('{DURACION_DE_LA_INDICACION}', p.length)
       str += xml_prescription
     }
-    xml = xml.replace('{PRESCRIPCIONES}', str)
   }
+  xml = xml.replace('{PRESCRIPCIONES}', str)
 
   xml = xml.replace('{DIAGNOSTICO}', object.diagnosis)
-  xml = xml.replace('{FECHA_PRESCRIPCION}', object.timestamp)
+  xml = xml.replace('{FECHA_PRESCRIPCION}', new Date().getTime())
   xml = xml.replace('{INDICACIONES_AL_PACIENTE}', object.pacient_detail)
   xml = xml.replace('{INDICACIONES_AL_FARMACEUTICO}', object.farma_detail)
   xml = xml.replace('{CONTRATO_DISPENSACION}', object.contract)
@@ -55,7 +55,6 @@ export function generateXML(object) {
 export function sign(object) {
   return new Promise((resolve, reject) => {
     let xml = generateXML(object)
-    resolve('enviado')
+    resolve(xml)
   })
-
 }

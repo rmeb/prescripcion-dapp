@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Validations from '../utils/Validations'
 import {sign} from '../lib/SignService'
+import config from '../lib/Config'
 
 const $ = window.$
 
@@ -23,8 +24,25 @@ export default class Dashboard extends Component {
 
   submit = (e) => {
     e.preventDefault()
+    let {establecimiento, profesional} = config.data
     let data = {
-      ...this.state
+      establecimiento, profesional,
+      paciente: {
+        name: this.state.name,
+        document_type: this.state.document_type,
+        document: this.state.document,
+        birthday: this.state.birthday,
+        weight: this.state.weight,
+        size: this.state.size,
+        address: this.state.address,
+        cite: this.state.cite,
+        phone: this.state.phone
+      },
+      prescriptions: [...this.state.drugs],
+      diagnosis: this.state.diagnosis,
+      pacient_detail: this.state.pacient_detail,
+      farma_detail: this.state.farma_detail,
+      contract: '0x0'
     }
     sign(data).then(console.log)
   }
@@ -154,7 +172,7 @@ export default class Dashboard extends Component {
                   <ul className="list-group list-group-flush mt-3">
                     {this.state.drugs.map((d, i) => (
                       <li key={i} className="list-group-item">
-                        <strong>{d.drug.DCI}</strong> {d.dose} {d.drug.FORMA_FARMACEUTICA} cada {d.frequency} horas por {d.length} dias
+                        <strong>{d.dci}</strong> {d.dose} {d.forma} cada {d.frequency} horas por {d.length} dias
                         <button type="button" className="close" aria-label="Close" onClick={e => this.removeDrug(i)}>
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -213,14 +231,32 @@ class Prescriptions extends Component {
 
   add = (e) => {
     e.preventDefault()
+    let {dose, frequency, length} = this.state
+
+    if (dose.length === 0 || isNaN(dose)) {
+      $('#dose').addClass('is-invalid')
+      return
+    }
+    if (frequency.length === 0 || isNaN(frequency)) {
+      $('#frequency').addClass('is-invalid')
+      return
+    }
+    if (length.length === 0 || isNaN(length)) {
+      $('#length').addClass('is-invalid')
+      return
+    }
+
     if (this.state.drug !== null) {
       this.props.onAdd({
-        drug: {...this.state.drug},
-        dose: this.state.dose,
-        frequency: this.state.frequency,
-        length: this.state.length
+        dci: this.state.drug.DCI,
+        forma: this.state.drug.FORMA_FARMACEUTICA,
+        code: this.state.drug.CENS_ID,
+        dose: dose,
+        frequency: frequency,
+        length: length
       })
       this.setState({...PrescriptionInitialState})
+      $('#prescipcionModal').modal('toggle')
     }
   }
 
@@ -237,6 +273,13 @@ class Prescriptions extends Component {
   onChange = (e) => {
     let id = e.target.id
     let value = e.target.value
+
+    if (isNaN(value)) {
+      $('#' + id).addClass('is-invalid')
+    } else {
+      $('#' + id).removeClass('is-invalid')
+    }
+
     this.setState({[id]: value})
   }
 
@@ -266,14 +309,17 @@ class Prescriptions extends Component {
                     <div className="form-group col-md-4">
                       <label htmlFor="dose">{this.state.drug.FORMA_FARMACEUTICA}</label>
                       <input className="form-control" id="dose" value={this.state.dose} onChange={this.onChange}/>
+                      <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                     <div className="form-group col-md-4">
                       <label htmlFor="frequency">Horas</label>
                       <input className="form-control" id="frequency"  value={this.state.frequency} onChange={this.onChange}/>
+                      <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                     <div className="form-group col-md-4">
                       <label htmlFor="length">Dias</label>
                       <input className="form-control" id="length"  value={this.state.length} onChange={this.onChange}/>
+                      <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
                   </div>
                 </div>
@@ -281,7 +327,7 @@ class Prescriptions extends Component {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-              <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={this.add}>Agregar</button>
+              <button type="button" className="btn btn-primary" onClick={this.add}>Agregar</button>
             </div>
           </div>
         </div>
