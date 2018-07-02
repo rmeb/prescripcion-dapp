@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import Validations from '../utils/Validations'
-import {sign} from '../lib/SignService'
+import {sha3_256} from 'js-sha3'
+import {sign, generateXML} from '../lib/SignService'
+import {saveRecipeXml} from '../lib/Api'
 import config from '../lib/Config'
 
 const $ = window.$
 const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-const SOAP = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.signserver.esign.com/"><soapenv:Header/><soapenv:Body><ws:intercambiaDoc><Encabezado><User>{RUN}</User><Password>{CLAVE}</Password><NombreConfiguracion>{RUN}</NombreConfiguracion></Encabezado><Parametro><Documento>{DOCUMENT}</Documento><NombreDocumento></NombreDocumento><MetaData></MetaData></Parametro></ws:intercambiaDoc></soapenv:Body></soapenv:Envelope>'
 
 function randomString(length) {
     var result = '';
@@ -53,23 +54,13 @@ export default class Dashboard extends Component {
       contract: '0x0'
     }
     let code = randomString(6)
-    sign(data).then(xml => {
-      let base64 = btoa(xml)
-      let data = SOAP.replace('{DOCUMENT}', base64)
-      data = data.replace('{RUN}', signService.run)
-      data = data.replace('{RUN}', signService.run)
-      data = data.replace('{CLAVE}', signService.clave)
-      console.log(data)
-      fetch('http://200.111.181.78/SignServerEsign/WSIntercambiaDocSoap', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type':  'text/xml;charset=UTF-8',
-          'SOAPAction': ''
-        },
-        body: data
-      }).then(console.log).catch(console.error)
-    })
+    let xml = generateXML(data)
+    let hash = sha3_256(this.state.document + ':' + code)
+    console.log()
+    saveRecipeXml({id: hash, receta: xml}).then(console.log).catch(this.onError)
+    sign(xml, signService).then(r => r.text()).then(body => {
+      console.log('[sign]', body)
+    }).catch(this.onError)
   }
 
   onChange = (e) => {
@@ -101,6 +92,10 @@ export default class Dashboard extends Component {
     let drugs = [...this.state.drugs]
     drugs.splice(index, 1)
     this.setState({drugs})
+  }
+
+  onError = (e) => {
+    console.error(e)
   }
 
   render() {

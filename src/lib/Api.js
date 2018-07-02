@@ -1,5 +1,6 @@
-//const APIURL = 'http://192.168.0.25:4000'
 const APIURL = 'https://rx-keyserver.herokuapp.com'
+const RECIPE_API = 'http://192.168.0.25:4000'
+//const RECIPE_API = 'https://servidor-rme-sandbox.herokuapp.com/'
 
 export function save_keystore(rut, body) {
   return send('/keystore/' + rut, {
@@ -26,6 +27,22 @@ export function refund(address) {
   })
 }
 
+export function saveRecipeXml(data) {
+  return fetch(RECIPE_API + '/receta', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }).then(response).then(success)
+}
+
+export function getRecipeXml(identifier) {
+  return fetch(RECIPE_API + '/receta/' + identifier, {
+    method: 'GET'
+  }).then(response).then(success)
+}
+
 function send(path, options) {
   return fetch(APIURL + path, options).then(response).then(success)
 }
@@ -41,33 +58,3 @@ function response(response) {
 function success(response) {
   return response.status === 'success' ? response.data : Promise.reject(response.data)
 }
-
-/*
-//FIXME comentar dummy fetch
-function fetch(path, data) {
-  console.log(path, data)
-  return new Promise((resolve, reject) => {
-    if (data.method === "POST")  {
-      window.localStorage.setItem('rx-db-tmp', data.body)
-      resolve({
-        status: 200,
-        json: () => ({
-          status: 'success',
-          data: 'created'
-        })
-      })
-    } else {
-      resolve({
-        status: 200,
-        json: function() {
-          let obj = JSON.parse(window.localStorage.getItem('rx-db-tmp'))
-          return {
-            status: 'success',
-            data: obj.keystore
-          }
-        }
-      })
-    }
-  })
-}
-*/

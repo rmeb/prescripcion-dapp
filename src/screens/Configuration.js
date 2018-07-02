@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import Validations from '../utils/Validations'
 import config from '../lib/Config'
 
-const KEY = 'prescription-dapp-config'
-const storage = window.localStorage
 const $ = window.$
 
 export default class Configuration extends Component {
@@ -28,7 +26,6 @@ export default class Configuration extends Component {
   }
 
   componentDidMount() {
-    //let config = JSON.parse(storage.getItem(KEY))
     let data = config.data
     if (data !== null) {
       let {establecimiento, profesional} = data
