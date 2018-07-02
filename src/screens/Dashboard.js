@@ -4,6 +4,14 @@ import {sign} from '../lib/SignService'
 import config from '../lib/Config'
 
 const $ = window.$
+const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+const SOAP = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.signserver.esign.com/"><soapenv:Header/><soapenv:Body><ws:intercambiaDoc><Encabezado><User>{RUN}</User><Password>{CLAVE}</Password><NombreConfiguracion>{RUN}</NombreConfiguracion></Encabezado><Parametro><Documento>{DOCUMENT}</Documento><NombreDocumento></NombreDocumento><MetaData></MetaData></Parametro></ws:intercambiaDoc></soapenv:Body></soapenv:Envelope>'
+
+function randomString(length) {
+    var result = '';
+    for (var i = length; i > 0; --i) result += CHARS[Math.floor(Math.random() * CHARS.length)];
+    return result;
+}
 
 export default class Dashboard extends Component {
   state = {
@@ -24,7 +32,7 @@ export default class Dashboard extends Component {
 
   submit = (e) => {
     e.preventDefault()
-    let {establecimiento, profesional} = config.data
+    let {establecimiento, profesional, signService} = config.data
     let data = {
       establecimiento, profesional,
       paciente: {
@@ -44,7 +52,24 @@ export default class Dashboard extends Component {
       farma_detail: this.state.farma_detail,
       contract: '0x0'
     }
-    sign(data).then(console.log)
+    let code = randomString(6)
+    sign(data).then(xml => {
+      let base64 = btoa(xml)
+      let data = SOAP.replace('{DOCUMENT}', base64)
+      data = data.replace('{RUN}', signService.run)
+      data = data.replace('{RUN}', signService.run)
+      data = data.replace('{CLAVE}', signService.clave)
+      console.log(data)
+      fetch('http://200.111.181.78/SignServerEsign/WSIntercambiaDocSoap', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type':  'text/xml;charset=UTF-8',
+          'SOAPAction': ''
+        },
+        body: data
+      }).then(console.log).catch(console.error)
+    })
   }
 
   onChange = (e) => {

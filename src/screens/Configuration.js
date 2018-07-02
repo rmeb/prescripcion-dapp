@@ -70,6 +70,10 @@ export default class Configuration extends Component {
         profession: this.state.profession,
         super_salud: this.state.super_salud,
         colegio: this.state.colegio
+      },
+      signService: {
+        run: this.state.run,
+        clave: this.state.password
       }
     })
     this.setState({show: true})
