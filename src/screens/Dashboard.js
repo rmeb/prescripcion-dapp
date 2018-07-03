@@ -5,6 +5,8 @@ import {generateXML} from '../lib/SignService'
 import {saveRecipe} from '../lib/Api'
 import config from '../lib/Config'
 import {PRESCRIPTION_SUCCESS} from '../utils/Routes'
+import Error from '../components/Error'
+import LoadingButton from '../components/LoadingButton'
 
 const $ = window.$
 const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -30,11 +32,18 @@ export default class Dashboard extends Component {
     pacient_detail: '',
     farma_detail: '',
     drugs: [],
-    code: ''
+    code: '',
+    error: '',
+    loading: false
   }
 
   submit = (e) => {
     e.preventDefault()
+    if (this.state.drugs.length === 0) {
+      this.setState({error: 'Debe agregar medicamentos'})
+      return
+    }
+
     let {establecimiento, profesional, signService} = config.data
     let data = {
       establecimiento, profesional,
@@ -59,6 +68,7 @@ export default class Dashboard extends Component {
     let xml = generateXML(data)
     let hash = sha3_256(this.state.document + ':' + code)
 
+    this.setState({loading: true})
     saveRecipe({id: hash, receta: xml, credentials: signService}).then(() => {
       this.props.history.push(PRESCRIPTION_SUCCESS.replace(':code', code))
     }).catch(this.onError)
@@ -84,8 +94,7 @@ export default class Dashboard extends Component {
   }
 
   onAdd = (prescription) => {
-    console.log(prescription)
-    this.setState({drugs: [...this.state.drugs, prescription]})
+    this.setState({drugs: [...this.state.drugs, prescription], error: ''})
   }
 
   removeDrug = (index) => {
@@ -96,6 +105,7 @@ export default class Dashboard extends Component {
 
   onError = (e) => {
     console.error(e)
+    this.setState({error: e.message ? e.message : e, loading: false})
   }
 
   render() {
@@ -188,7 +198,7 @@ export default class Dashboard extends Component {
             <div className="col-md-12">
               <div className="card">
                 <div className="card-body">
-                  <h5 className="card-title">Prescripciones <button className="btn btn-danger" data-toggle="modal" data-target="#prescipcionModal"><i className="far fa-plus"></i></button></h5>
+                  <h5 className="card-title">Prescripciones <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#prescipcionModal"><i className="far fa-plus"></i></button></h5>
                   <ul className="list-group list-group-flush mt-3">
                     {this.state.drugs.map((d, i) => (
                       <li key={i} className="list-group-item">
@@ -204,7 +214,8 @@ export default class Dashboard extends Component {
               </div>
             </div>
           </div>
-          <button type="submit" className="btn btn-primary btn-block mt-3">Emitir</button>
+          <Error message={this.state.error} onClick={() => this.setState({error: ''})} />
+          <LoadingButton className="btn btn-primary btn-block mt-3" label="Emitir" loading={this.state.loading}/>
         </form>
       </div>
     );
