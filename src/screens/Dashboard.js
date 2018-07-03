@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Validations from '../utils/Validations'
 import {sha3_256} from 'js-sha3'
-import {sign, generateXML} from '../lib/SignService'
-import {saveRecipeXml} from '../lib/Api'
+import {generateXML} from '../lib/SignService'
+import {saveRecipe} from '../lib/Api'
 import config from '../lib/Config'
+import {PRESCRIPTION_SUCCESS} from '../utils/Routes'
 
 const $ = window.$
 const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -28,7 +29,8 @@ export default class Dashboard extends Component {
     diagnosis: '',
     pacient_detail: '',
     farma_detail: '',
-    drugs: []
+    drugs: [],
+    code: ''
   }
 
   submit = (e) => {
@@ -56,10 +58,9 @@ export default class Dashboard extends Component {
     let code = randomString(6)
     let xml = generateXML(data)
     let hash = sha3_256(this.state.document + ':' + code)
-    console.log()
-    saveRecipeXml({id: hash, receta: xml}).then(console.log).catch(this.onError)
-    sign(xml, signService).then(r => r.text()).then(body => {
-      console.log('[sign]', body)
+
+    saveRecipe({id: hash, receta: xml, credentials: signService}).then(() => {
+      this.props.history.push(PRESCRIPTION_SUCCESS.replace(':code', code))
     }).catch(this.onError)
   }
 
@@ -70,7 +71,6 @@ export default class Dashboard extends Component {
     let validation = e.target.dataset.validation
 
     if (validation) {
-      console.log(validation)
       if (!Validations[validation](value)) {
         $('#' + id).addClass('is-invalid')
         this.setState({valid: required ? false : true})

@@ -1,5 +1,5 @@
 const APIURL = 'https://rx-keyserver.herokuapp.com'
-const RECIPE_API = 'http://192.168.0.25:4000'
+const RECIPE_API = 'http://192.168.0.5:4000'
 //const RECIPE_API = 'https://servidor-rme-sandbox.herokuapp.com/'
 
 export function save_keystore(rut, body) {
@@ -27,7 +27,7 @@ export function refund(address) {
   })
 }
 
-export function saveRecipeXml(data) {
+export function saveRecipe(data) {
   return fetch(RECIPE_API + '/receta', {
     method: 'POST',
     headers: {

@@ -54,10 +54,12 @@ export function generateXML(object) {
 }
 
 export function sign(xml, props) {
+  let run = props.run.replace('-', '')
   let data = SOAP.replace('{DOCUMENT}', btoa(xml))
-  data = data.replace('{RUN}', props.run)
-  data = data.replace('{RUN}', props.run)
+  data = data.replace('{RUN}', run)
+  data = data.replace('{RUN}', run)
   data = data.replace('{CLAVE}', props.clave)
+  console.log(data)
   return fetch('http://200.111.181.78/SignServerEsign/WSIntercambiaDocSoap', {
     method: 'POST',
     //mode: 'no-cors',
