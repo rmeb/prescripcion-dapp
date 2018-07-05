@@ -3,15 +3,25 @@ import {HashRouter as Router, Route, Redirect, Link} from 'react-router-dom'
 import {DASHBOARD, CONFIGURATION, HEADER, LOGIN, CREATE_ACCOUNT, SETTINGS, PRESCRIPTION_SUCCESS} from './utils/Routes'
 import {Dashboard, Configuration, Login, CreateAccount, Settings, PrescriptionSuccess} from './screens'
 import Header from './components/Header'
+import Error from './components/Error'
 import Battery from './components/Battery'
 import './App.css';
 
 import session from './lib/Session'
 
 class App extends Component {
+  state = {
+    error: ''
+  }
+
   logout = (e) => {
     session.logout()
     window.$('#exitModal').modal('toggle')
+  }
+
+  onError = (e) => {
+    console.error(e)
+    this.setState({error: e.message ? e.message : e})
   }
 
   render() {
@@ -22,8 +32,9 @@ class App extends Component {
           <Route exact path={CREATE_ACCOUNT} component={CreateAccount}/>
           <PrivateRoute path={HEADER} component={Header} />
           <div className="cs-body-margin">
-            <PrivateRoute path="/private" component={BatteryPanel}/>
-            <PrivateRoute exact path={DASHBOARD} component={Dashboard}/>
+            <PrivateRoute path="/private" component={BatteryPanel} onError={this.onError}/>
+            <PrivateRoute path="/private" component={Error} message={this.state.error} onClick={() => this.setState({error: ''})}/>
+            <PrivateRoute exact path={DASHBOARD} component={Dashboard} onError={this.onError}/>
             <PrivateRoute exact path={PRESCRIPTION_SUCCESS} component={PrescriptionSuccess}/>
             <PrivateRoute exact path={CONFIGURATION} component={Configuration}/>
             <PrivateRoute exact path={SETTINGS} component={Settings}/>
@@ -37,17 +48,17 @@ class App extends Component {
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={props => session.valid() ? (
-      <Component {...props}/>
+      <Component {...props} {...rest}/>
     ) : (
       <Redirect to={{pathname: LOGIN, state: { from: props.location }}}/>
     )
   }/>
 );
 
-const BatteryPanel = ({balance, network}) => (
+const BatteryPanel = ({onError}) => (
   <div className="row mb-3 justify-content-end">
     <div className="col-sm-12">
-      <Battery balance={balance} version={network}/>
+      <Battery onError={onError} />
     </div>
   </div>
 )
