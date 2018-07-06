@@ -54,7 +54,7 @@ export default class Dashboard extends Component {
         weight: this.state.weight,
         size: this.state.size,
         address: this.state.address,
-        cite: this.state.cite,
+        city: this.state.city,
         phone: this.state.phone
       },
       prescriptions: [...this.state.drugs],
@@ -66,7 +66,7 @@ export default class Dashboard extends Component {
     let code = randomString(6)
     let xml = generateXML(data)
     let hash = sha3_256(this.state.document + ':' + code)
-
+    console.log(xml)
     this.setState({loading: true})
     saveRecipe({id: hash, receta: xml, credentials: signService}).then(() => {
       this.props.history.push(PRESCRIPTION_SUCCESS.replace(':code', code))
