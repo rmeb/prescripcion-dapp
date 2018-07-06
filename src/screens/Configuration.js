@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Validations from '../utils/Validations'
 import config from '../lib/Config'
+import session from '../lib/Session'
 
 const $ = window.$
 
@@ -68,10 +69,7 @@ export default class Configuration extends Component {
         super_salud: this.state.super_salud,
         colegio: this.state.colegio
       },
-      signService: {
-        run: this.state.run,
-        clave: this.state.password
-      }
+      password: this.state.password
     })
     this.setState({show: true})
   }
@@ -196,7 +194,7 @@ export default class Configuration extends Component {
                   <h5 className="card-title">Servicio de Firma</h5>
                   <div className="form-group">
                     <label htmlFor="name">RUN</label>
-                    <input type="text" className="form-control" value={this.state.run} disabled/>
+                    <input type="text" className="form-control" value={session.get_data().rut} disabled/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="password">Clave de firma</label>

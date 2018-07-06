@@ -7,6 +7,7 @@ import config from '../lib/Config'
 import {PRESCRIPTION_SUCCESS} from '../utils/Routes'
 import LoadingButton from '../components/LoadingButton'
 import Prescriptions from '../components/Prescriptions'
+import session from '../lib/Session'
 
 const $ = window.$
 const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -43,7 +44,7 @@ export default class Dashboard extends Component {
       return
     }
 
-    let {establecimiento, profesional, signService} = config.data
+    let {establecimiento, profesional, password} = config.data
     let data = {
       establecimiento, profesional,
       paciente: {
@@ -66,9 +67,10 @@ export default class Dashboard extends Component {
     let code = randomString(6)
     let xml = generateXML(data)
     let hash = sha3_256(this.state.document + ':' + code)
-    console.log(xml)
+    let run = session.get_data().rut
+
     this.setState({loading: true})
-    saveRecipe({id: hash, receta: xml, credentials: signService}).then(() => {
+    saveRecipe({id: hash, receta: xml, credentials: {run, clave: password}}).then(() => {
       this.props.history.push(PRESCRIPTION_SUCCESS.replace(':code', code))
     }).catch(this.onError)
   }
