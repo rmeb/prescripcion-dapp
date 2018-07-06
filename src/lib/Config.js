@@ -1,3 +1,5 @@
+import session from './Session'
+
 const storage = window.localStorage
 const KEY = 'prescription-dapp-config'
 
@@ -5,13 +7,18 @@ const KEY = 'prescription-dapp-config'
 * Maneja el localStorage para almacenar la sesion del usuario
 **/
 class Config {
-  constructor() {
-    this.data = JSON.parse(storage.getItem(KEY))
-  }
-
   saveConfig(data) {
     this.data = data
-    storage.setItem(KEY, JSON.stringify(this.data))
+    let run = session.get_data().rut
+    storage.setItem(KEY, JSON.stringify(run + '-' +this.data))
+  }
+
+  get() {
+    if (!this.data) {
+      let run = session.get_data().rut
+      this.data = JSON.parse(storage.getItem(run + '-' + KEY))
+    }
+    return this.data
   }
 }
 

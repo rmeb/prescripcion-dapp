@@ -27,7 +27,7 @@ export default class Configuration extends Component {
   }
 
   componentDidMount() {
-    let data = config.data
+    let data = config.get()
     if (data !== null) {
       let {establecimiento, profesional} = data
       this.setState({
@@ -50,7 +50,6 @@ export default class Configuration extends Component {
 
   submit = (e) => {
     e.preventDefault()
-    console.log(this.state)
     config.saveConfig({
       establecimiento: {
         name: this.state.name,

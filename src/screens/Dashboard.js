@@ -4,7 +4,7 @@ import {sha3_256} from 'js-sha3'
 import {generateXML} from '../lib/SignService'
 import {saveRecipe} from '../lib/Api'
 import config from '../lib/Config'
-import {PRESCRIPTION_SUCCESS} from '../utils/Routes'
+import {PRESCRIPTION_SUCCESS, CONFIGURATION} from '../utils/Routes'
 import LoadingButton from '../components/LoadingButton'
 import Prescriptions from '../components/Prescriptions'
 import session from '../lib/Session'
@@ -35,6 +35,13 @@ export default class Dashboard extends Component {
     drugs: [],
     code: '',
     loading: false
+  }
+
+  componentDidMount() {
+    let conf = config.get()
+    if (!conf || conf === null) {
+      this.props.history.push(CONFIGURATION)
+    }
   }
 
   submit = (e) => {
