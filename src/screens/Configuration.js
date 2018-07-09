@@ -78,6 +78,7 @@ export default class Configuration extends Component {
     let value = e.target.value
     let required = e.target.required
     let validation = e.target.dataset.validation
+    let equals = e.target.dataset.equals
 
     if (validation) {
       if (!Validations[validation](value)) {
@@ -85,6 +86,17 @@ export default class Configuration extends Component {
         this.setState({valid: required ? false : true})
       } else {
         $('#' + id).removeClass('is-invalid')
+        this.setState({valid: true})
+      }
+    }
+    if (equals) {
+      if (value !== this.state[equals]) {
+        $('#' + id).addClass('is-invalid')
+        $('#' + equals).addClass('is-invalid')
+        this.setState({valid: false})
+      } else {
+        $('#' + id).removeClass('is-invalid')
+        $('#' + equals).removeClass('is-invalid')
         this.setState({valid: true})
       }
     }
@@ -197,11 +209,11 @@ export default class Configuration extends Component {
                   </div>
                   <div className="form-group">
                     <label htmlFor="password">Clave de firma</label>
-                    <input type="password" className="form-control" id="password" value={this.state.password} onChange={this.onChange} required/>
+                    <input type="password" className="form-control" id="password" data-equals="repassword" value={this.state.password} onChange={this.onChange} required/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="repassword">Re-ingrese clave de firma</label>
-                    <input type="password" className="form-control" id="repassword" value={this.state.repassword} onChange={this.onChange} required/>
+                    <input type="password" className="form-control" id="repassword" data-equals="password" value={this.state.repassword} onChange={this.onChange} required/>
                     <div className="invalid-feedback">Las claves deben ser iguales.</div>
                   </div>
                 </div>
