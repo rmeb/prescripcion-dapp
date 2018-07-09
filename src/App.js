@@ -22,6 +22,7 @@ class App extends Component {
   onError = (e) => {
     console.error(e)
     this.setState({error: e.message ? e.message : e})
+    window.scrollTo(0, 0)
   }
 
   render() {
