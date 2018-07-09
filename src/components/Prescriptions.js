@@ -71,7 +71,8 @@ export default class Prescriptions extends Component {
   }
 
   selectDrug = (index) => {
-    this.setState({drug: this.state.drugs[index]})
+    let drug = this.state.drugs[index]
+    this.setState({drug, filter: drug.DCI, drugs: []})
   }
 
   searchDrug = (e) => {

@@ -34,7 +34,8 @@ export default class Dashboard extends Component {
     farma_detail: '',
     drugs: [],
     code: '',
-    loading: false
+    loading: false,
+    selectedDrug: null
   }
 
   componentDidMount() {
@@ -105,9 +106,19 @@ export default class Dashboard extends Component {
     this.setState({drugs: [...this.state.drugs, prescription], error: ''})
   }
 
-  removeDrug = (index) => {
+  removeDrug = (e, index) => {
+    e.preventDefault()
     let drugs = [...this.state.drugs]
     drugs.splice(index, 1)
+    this.setState({drugs})
+  }
+
+  modifyDrug = (drug, index) => {
+    let drugs = [...this.state.drugs]
+    let obj = drugs[index]
+    drugs.splice(index, 1, {
+      ...obj, ...drug
+    })
     this.setState({drugs})
   }
 
@@ -206,18 +217,19 @@ export default class Dashboard extends Component {
             <div className="col-md-12">
               <div className="card">
                 <div className="card-body">
-                  <h5 className="card-title">Prescripciones <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#prescipcionModal"><i className="far fa-plus"></i></button></h5>
+                  {/*<h5 className="card-title">Prescripciones <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#prescipcionModal"><i className="far fa-plus"></i></button></h5>*/}
+                  <h5 className="card-title">Prescripciones</h5>
                   <ul className="list-group list-group-flush mt-3">
                     {this.state.drugs.map((d, i) => (
                       <li key={i} className="list-group-item">
-                        <strong>{d.dci}</strong> {d.dose} {d.forma} cada {d.frequency} horas por {d.length} dias
-                        <button type="button" className="close" aria-label="Close" onClick={e => this.removeDrug(i)}>
-                          <span aria-hidden="true">&times;</span>
-                        </button>
+                        <PrescriptionItem drug={d} index={i} onRemove={this.removeDrug} onModify={this.modifyDrug}/>
                       </li>
                     ))}
+                    <li className="list-group-item text-right">
+                      <a href="" data-toggle="modal" data-target="#prescipcionModal">Agregar medicamento.</a>
+                    </li>
                   </ul>
-                  <Prescriptions onAdd={this.onAdd} />
+                  <Prescriptions onAdd={this.onAdd}/>
                 </div>
               </div>
             </div>
@@ -228,3 +240,97 @@ export default class Dashboard extends Component {
     );
   }
 }
+
+class PrescriptionItem extends Component {
+  state = {
+    dose: '',
+    frequency: '',
+    length: '',
+    modify: false
+  }
+
+  componentDidMount() {
+    this.setState({
+      dose: this.props.drug.dose,
+      frequency: this.props.drug.frequency,
+      length: this.props.drug.length,
+    })
+  }
+
+  apply = (e) => {
+    let {dose, frequency, length} = this.state
+
+    if (isNaN(dose)) {
+      return $('#dose').addClass('is-invalid')
+    }
+    if (isNaN(frequency)) {
+      return $('#frequency').addClass('is-invalid')
+    }
+    if (isNaN(length)) {
+      return $('#length').addClass('is-invalid')
+    }
+
+
+    this.setState({modify: false})
+    this.props.onModify({
+      dose, frequency, length
+    }, this.props.index)
+  }
+
+  modify = (e) => {
+    e.preventDefault()
+    this.setState({modify: true})
+  }
+
+  onChange = (e) => {
+    let id = e.target.id
+    let value = e.target.value
+
+    if (isNaN(value)) {
+      $('#' + id).addClass('is-invalid')
+    } else {
+      $('#' + id).removeClass('is-invalid')
+    }
+
+    this.setState({[id]: value})
+  }
+
+  render() {
+    let drug = this.props.drug
+    if (!this.state.modify) {
+      return <Item drug={drug} onModify={this.modify} onRemove={e => this.props.onRemove(e, this.props.index)} />
+    }
+    return (
+      <div className="row d-flex flex-direction-row align-items-center justify-content-around">
+        <strong>{drug.dci}</strong>
+        <div className="form-row">
+          <div className="form-group col-md-4">
+            <label htmlFor="dose">{drug.forma}</label>
+            <input className="form-control form-control-sm" id="dose" value={this.state.dose} onChange={this.onChange}/>
+            <div className="invalid-feedback">Debe ser un numero.</div>
+          </div>
+          <div className="form-group col-md-4">
+            <label htmlFor="frequency">Horas</label>
+            <input className="form-control form-control-sm" id="frequency" value={this.state.frequency} onChange={this.onChange}/>
+            <div className="invalid-feedback">Debe ser un numero.</div>
+          </div>
+          <div className="form-group col-md-4">
+            <label htmlFor="length">Dias</label>
+            <input className="form-control form-control-sm" id="length"  value={this.state.length} onChange={this.onChange}/>
+            <div className="invalid-feedback">Debe ser un numero.</div>
+          </div>
+        </div>
+        <button className="btn btn-success" onClick={this.apply}><i className="fas fa-check"></i></button>
+      </div>
+    )
+  }
+}
+
+const Item = ({drug, onModify, onRemove}) => (
+  <div className="d-flex justify-content-between align-items-center">
+    <a href="" onClick={onModify}>
+      <strong>{drug.dci}</strong>, {drug.dose} {drug.forma} cada {drug.frequency} horas por {drug.length} dias
+    </a>
+    <a href="" onClick={onRemove}><i className="fas fa-times fa-2x"></i></a>
+  </div>
+)
