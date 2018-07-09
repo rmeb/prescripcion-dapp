@@ -10,7 +10,7 @@ class Config {
   saveConfig(data) {
     this.data = data
     let run = session.get_data().rut
-    storage.setItem(KEY, JSON.stringify(run + '-' +this.data))
+    storage.setItem(run + '-' + KEY, JSON.stringify(this.data))
   }
 
   get() {
