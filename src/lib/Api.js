@@ -1,6 +1,7 @@
 const APIURL = 'https://rx-keyserver.herokuapp.com'
 //const APIURL = 'http://192.168.0.25:4000'
 const RECIPE_API = 'https://servidor-rme-sandbox.herokuapp.com'
+const FARMA_API = 'https://servidor-farmacos-sandbox.herokuapp.com'
 
 export function save_keystore(rut, body) {
   return send('/keystore/' + rut, {
@@ -39,6 +40,18 @@ export function saveRecipe(data) {
 
 export function getRecipeXml(identifier) {
   return fetch(RECIPE_API + '/receta/' + identifier, {
+    method: 'GET'
+  }).then(response).then(success)
+}
+
+export function searchFarmaco(query) {
+  return fetch(FARMA_API + '/farmaco?q=' + query, {
+    method: 'GET'
+  }).then(response).then(success)
+}
+
+export function getFarmaco(codigo) {
+  return fetch(FARMA_API + '/farmaco/' + codigo, {
     method: 'GET'
   }).then(response).then(success)
 }

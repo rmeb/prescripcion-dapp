@@ -1,31 +1,7 @@
 import React, { Component } from 'react';
-const $ = window.$
+import {searchFarmaco, getFarmaco} from '../lib/Api'
 
-const DRUGS = [{
-  CENS_ID: 6663524,
-  DCI: 'aciclovir',
-  FORMA_FARMACEUTICA: 'comprimido',
-  CONCENTRACION_UNIDAD: 'mg',
-  CONCENTRACION_VALOR: 400,
-  ES_RESTRINGIDO: 'no',
-  DESCRIPCION_PROD_COMERCIAL: 'aciclovir 400 mg comprimido (Mintlab)'
-}, {
-  CENS_ID: 120123,
-  DCI: 'sertralina',
-  FORMA_FARMACEUTICA: 'comprimido',
-  CONCENTRACION_UNIDAD: 'mg',
-  CONCENTRACION_VALOR: 50,
-  ES_RESTRINGIDO: 'no',
-  DESCRIPCION_PROD_COMERCIAL: 'altruline 50 mg comprimido recubierto (Roerig)'
-}, {
-  CENS_ID: 6619658,
-  DCI: 'fentermina',
-  FORMA_FARMACEUTICA: 'cápsula',
-  CONCENTRACION_UNIDAD: 'mg',
-  CONCENTRACION_VALOR: 37.5,
-  ES_RESTRINGIDO: 'si',
-  DESCRIPCION_PROD_COMERCIAL: 'sentis 37,5 mg cápsula (Lab Chile)'
-}]
+const $ = window.$
 
 const PrescriptionInitialState = {
   filter: '',
@@ -58,9 +34,9 @@ export default class Prescriptions extends Component {
 
     if (this.state.drug !== null) {
       this.props.onAdd({
-        dci: this.state.drug.DCI,
-        forma: this.state.drug.FORMA_FARMACEUTICA,
-        code: this.state.drug.CENS_ID,
+        dci: this.state.drug.dci,
+        forma: this.state.drug.forma_farmaceutica,
+        code: this.state.drug.codigo,
         dose: dose,
         frequency: frequency,
         length: length
@@ -71,14 +47,18 @@ export default class Prescriptions extends Component {
   }
 
   selectDrug = (index) => {
-    let drug = this.state.drugs[index]
-    this.setState({drug, filter: drug.DCI, drugs: []})
+    let d = this.state.drugs[index]
+    getFarmaco(d.codigo).then(drug => {
+      this.setState({drug, filter: drug.dci, drugs: []})
+    }).catch(console.error)
   }
 
   searchDrug = (e) => {
     let filter = e.target.value
-    let drugs = DRUGS.filter(d => d.DCI.indexOf(filter) !== -1 || d.DESCRIPCION_PROD_COMERCIAL.indexOf(filter) !== -1)
-    this.setState({filter, drugs: drugs.length > 0 && filter.length > 0 ? drugs.slice(0, 3) : []})
+    searchFarmaco(filter).then(result => {
+      this.setState({drugs: result})
+    }).catch(console.error)
+    this.setState({filter})
   }
 
   onChange = (e) => {
@@ -110,7 +90,7 @@ export default class Prescriptions extends Component {
               <ul className="list-group">
                 {this.state.drugs.map((d, i) => (
                   <li key={i} className={"list-group-item cs-pointer" + (d === this.state.drug ? ' active' : '')} onClick={() => this.selectDrug(i)}>
-                    {d.DCI}
+                    {d.dci}
                   </li>
                 ))}
               </ul>
@@ -118,7 +98,7 @@ export default class Prescriptions extends Component {
                 <div className="mt-3">
                   <div className="form-row">
                     <div className="form-group col-md-4">
-                      <label htmlFor="dose">{this.state.drug.FORMA_FARMACEUTICA}</label>
+                      <label htmlFor="dose">{this.state.drug.forma_farmaceutica}</label>
                       <input className="form-control" id="dose" value={this.state.dose} onChange={this.onChange}/>
                       <div className="invalid-feedback">Debe ser un numero.</div>
                     </div>
