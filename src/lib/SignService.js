@@ -2,7 +2,7 @@ const XML_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?><RME><ESTABLECIMIENT
 
 const XML_PRESCRIPTION = '<PRESCRIPCION><CODIGO_MEDICAMENTO>{CODIGO_MEDICAMENTO}</CODIGO_MEDICAMENTO><DOSIS>{DOSIS}</DOSIS><FRECUENCIA>{FRECUENCIA}</FRECUENCIA><DURACION_DE_LA_INDICACION>{DURACION_DE_LA_INDICACION}</DURACION_DE_LA_INDICACION></PRESCRIPCION>'
 
-export function generateXML(object) {
+export function generateXML(run, object) {
   let {establecimiento, profesional, paciente, prescriptions} = object
   let xml = XML_TEMPLATE.replace('{NOMBRE}', establecimiento.name)
   xml = xml.replace('{CODIGO_DEIS}', establecimiento.deis)
@@ -14,7 +14,7 @@ export function generateXML(object) {
   xml = xml.replace('{COMUNA}', establecimiento.comuna)
 
   xml = xml.replace('{NOMBRE_PROFESIONAL}', profesional.name)
-  xml = xml.replace('{NUMERO_DOCUMENTO_PROFESIONAL}', profesional.run)
+  xml = xml.replace('{NUMERO_DOCUMENTO_PROFESIONAL}', run)
   xml = xml.replace('{PROFESION}', profesional.profession)
   xml = xml.replace('{NUMERO_REGISTRO_PRESTADORES_INDIVIDUALES_SI_SALUD}', profesional.super_salud)
   xml = xml.replace('{NUMERO_REGISTRO_COLEGIO_PROFESIONAL}', profesional.colegio)

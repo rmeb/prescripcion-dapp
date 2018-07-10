@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import Validations from '../utils/Validations'
 import config from '../lib/Config'
-import session from '../lib/Session'
 
 const $ = window.$
 
 export default class Configuration extends Component {
   state = {
     name: '',
-    run: '',
     profession: '',
     super_salud: '',
     colegio: '',
@@ -40,7 +38,6 @@ export default class Configuration extends Component {
         depto: establecimiento.depto,
         comuna: establecimiento.comuna,
         worker_name: profesional.name,
-        run: profesional.run,
         profession: profesional.profession,
         super_salud: profesional.super_salud,
         colegio: profesional.colegio
@@ -63,7 +60,6 @@ export default class Configuration extends Component {
       },
       profesional: {
         name: this.state.worker_name,
-        run: this.state.run,
         profession: this.state.profession,
         super_salud: this.state.super_salud,
         colegio: this.state.colegio
@@ -114,16 +110,9 @@ export default class Configuration extends Component {
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">Datos de Profesional</h5>
-                  <div className="form-row">
-                    <div className="form-group col-md-6">
-                      <label htmlFor="name">Nombre</label>
-                      <input type="text" className="form-control" id="name" placeholder="" value={this.state.name} onChange={this.onChange} required/>
-                    </div>
-                    <div className="form-group col-md-6">
-                      <label htmlFor="run">RUN</label>
-                      <input type="text" className="form-control" id="run" placeholder="xxxxxxxx-x" value={this.state.run} onChange={this.onChange} data-validation="rut" required/>
-                      <div className="invalid-feedback">El rut no es valido.</div>
-                    </div>
+                  <div className="form-group">
+                    <label htmlFor="name">Nombre</label>
+                    <input type="text" className="form-control" id="name" placeholder="" value={this.state.name} onChange={this.onChange} required/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="Profesión">Profesión</label>
@@ -203,10 +192,6 @@ export default class Configuration extends Component {
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">Servicio de Firma</h5>
-                  <div className="form-group">
-                    <label htmlFor="name">RUN</label>
-                    <input type="text" className="form-control" value={session.get_data().rut} disabled/>
-                  </div>
                   <div className="form-group">
                     <label htmlFor="password">Clave de firma</label>
                     <input type="password" className="form-control" id="password" data-equals="repassword" value={this.state.password} onChange={this.onChange} required/>

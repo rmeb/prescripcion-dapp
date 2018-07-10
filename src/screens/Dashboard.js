@@ -52,7 +52,7 @@ export default class Dashboard extends Component {
       return
     }
 
-    let {establecimiento, profesional, password} = config.data
+    let {establecimiento, profesional, password} = config.get()
     let data = {
       establecimiento, profesional,
       paciente: {
@@ -72,10 +72,10 @@ export default class Dashboard extends Component {
       farma_detail: this.state.farma_detail,
       contract: '0x0'
     }
-    let code = randomString(6)
-    let xml = generateXML(data)
-    let hash = sha3_256(this.state.document + ':' + code)
     let run = session.get_data().rut
+    let code = randomString(6)
+    let xml = generateXML(run, data)
+    let hash = sha3_256(this.state.document + ':' + code)
 
     this.setState({loading: true})
     saveRecipe({id: hash, receta: xml, credentials: {run, clave: password}}).then(() => {

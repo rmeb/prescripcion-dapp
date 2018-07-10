@@ -23,7 +23,6 @@ it('generate xml', () => {
     },
     profesional: {
       name: 'Karina',
-      run: '1-9',
       profession: 'Curandero',
       super_salud: '334a34',
       colegio: 'ff3kmd',
@@ -51,6 +50,6 @@ it('generate xml', () => {
     farma_detail: 'indicaciones al farmaceutico',
     contract: '0x0'
   }
-  let xml = generateXML(object)
+  let xml = generateXML('1-9', object)
   console.log(xml)
 })
