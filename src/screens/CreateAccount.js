@@ -23,7 +23,7 @@ export default class CreateAccount extends Component {
 
   submit = (e) => {
     e.preventDefault()
-    let rut = this.state.rut.trim()
+    let rut = this.state.rut.trim().toUpperCase()
     let password = this.state.password.trim()
     let repassword = this.state.repassword.trim()
 

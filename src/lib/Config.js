@@ -8,17 +8,14 @@ const KEY = 'prescription-dapp-config'
 **/
 class Config {
   saveConfig(data) {
-    this.data = data
-    let run = session.get_data().rut
+    let run = session.get_data().rut.toUpperCase()
     storage.setItem(run + '-' + KEY, JSON.stringify(this.data))
   }
 
   get() {
-    if (!this.data) {
-      let run = session.get_data().rut
-      this.data = JSON.parse(storage.getItem(run + '-' + KEY))
-    }
-    return this.data
+    let run = session.get_data().rut.toUpperCase()
+    console.log(run)
+    return JSON.parse(storage.getItem(run + '-' + KEY))
   }
 }
 
