@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Validations from '../utils/Validations'
 import config from '../lib/Config'
+import session from '../lib/Session'
 
 const $ = window.$
 
@@ -110,9 +111,15 @@ export default class Configuration extends Component {
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">Datos de Profesional</h5>
-                  <div className="form-group">
-                    <label htmlFor="name">Nombre</label>
-                    <input type="text" className="form-control" id="name" placeholder="" value={this.state.name} onChange={this.onChange} required/>
+                  <div className="form-row">
+                    <div className="form-group col-md-6">
+                      <label htmlFor="name">Nombre</label>
+                      <input type="text" className="form-control" id="name" placeholder="" value={this.state.name} onChange={this.onChange} required/>
+                    </div>
+                    <div className="form-group col-md-6">
+                      <label htmlFor="name">Rut</label>
+                      <input type="text" className="form-control" id="name" placeholder="" value={session.data.rut} disabled/>
+                    </div>
                   </div>
                   <div className="form-group">
                     <label htmlFor="Profesión">Profesión</label>
@@ -192,6 +199,10 @@ export default class Configuration extends Component {
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">Servicio de Firma</h5>
+                  <div className="form-group">
+                    <label htmlFor="name">Rut</label>
+                    <input type="text" className="form-control" id="name" placeholder="" value={session.data.rut} disabled/>
+                  </div>
                   <div className="form-group">
                     <label htmlFor="password">Clave de firma</label>
                     <input type="password" className="form-control" id="password" data-equals="repassword" value={this.state.password} onChange={this.onChange} required/>
