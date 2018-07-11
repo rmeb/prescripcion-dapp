@@ -118,7 +118,7 @@ export default class Configuration extends Component {
                     </div>
                     <div className="form-group col-md-6">
                       <label htmlFor="name">Rut</label>
-                      <input type="text" className="form-control" id="name" placeholder="" value={session.data.rut} disabled/>
+                      <input className="form-control" value={session.data.rut} disabled/>
                     </div>
                   </div>
                   <div className="form-group">
@@ -201,7 +201,7 @@ export default class Configuration extends Component {
                   <h5 className="card-title">Servicio de Firma</h5>
                   <div className="form-group">
                     <label htmlFor="name">Rut</label>
-                    <input type="text" className="form-control" id="name" placeholder="" value={session.data.rut} disabled/>
+                    <input className="form-control" value={session.data.rut} disabled/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="password">Clave de firma</label>
