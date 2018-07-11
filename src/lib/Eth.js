@@ -1,3 +1,4 @@
+import {DespachoReceta} from 'rmeb-contracts'
 import {restore_keystore} from './Lightwallet'
 import {signing, txutils} from 'eth-lightwallet'
 const SignerProvider = require('ethjs-provider-signer');
@@ -8,7 +9,6 @@ let web3;
 let ks;
 
 function signTransaction(rawTx, cb) {
-  console.log('signing', rawTx)
   let tx = {
     nonce: rawTx.nonce,
     gasPrice: rawTx.gasPrice,
@@ -17,12 +17,11 @@ function signTransaction(rawTx, cb) {
     gasLimit: rawTx.gas,
     data: rawTx.data
   }
-  console.log(tx)
-  get_derived_key('asdf').then(pwDerivedKey => {
+  console.log(rawTx)
+  get_derived_key(rawTx.password).then(pwDerivedKey => {
     let contractTx = txutils.createContractTx(rawTx.from, tx)
     console.log(contractTx)
     let signedTx = signing.signTx(ks, pwDerivedKey, contractTx.tx, rawTx.from)
-    console.log(signedTx)
     cb(null, '0x' + signedTx)
   }).catch(e => cb(e))
 }
@@ -34,48 +33,34 @@ export function initWeb3(keystore){
     web3 = new Web3(provider)
     //initContract()
 }
-/*
-export function initContract() {
-  return web3.eth.net.getId().then(networkId => {
-    let artifact = AllowanceRegistry.v1;
-    let abi = artifact.abi;
-    let addr = artifact.networks[networkId].address
-    instanceContract = new web3.eth.Contract(abi, addr, {
-      from: '0x' + ks.addresses[0]
-      ,gas: 300000,
-      //gasPrice: '10000000000'
-    });
+
+export function deployContract(drugs, password) {
+  let artifact = DespachoReceta.v1;
+  let abi = artifact.abi;
+  let bytecode = artifact.bytecode;
+  let instanceContract = new web3.eth.Contract(abi);
+
+  let BN = web3.utils.BN;
+
+  let codes = drugs.map(d => (
+    web3.utils.toHex(new BN(d.code.toString()).toArray())
+  ))
+  let quantity = drugs.map(d => (
+    web3.utils.toHex(d.dose)
+  ))
+
+  console.log(codes, quantity)
+
+  return instanceContract.deploy({
+      data: bytecode,
+      arguments: [codes, quantity, '0x0', '0x0']
+  }).send({
+    from: '0x' + ks.addresses[0],
+    gas: 600000,
+    password
   })
 }
 
-export function isRegistrar() {
-  if (instanceContract !== null) {
-    return instanceContract.methods.registrars('0x' + ks.addresses[0]).call()
-  }
-  return Promise.reject('Contrato no inicializado')
-}
-
-export function isAllowed(address) {
-  if (instanceContract !== null) {
-    return instanceContract.methods.isAllowed(address).call()
-  }
-  return Promise.reject('Contrato no inicializado')
-}
-
-export function allowUser(address) {
-  if (instanceContract !== null) {
-    return instanceContract.methods.allowUser(address).send()
-  }
-  return Promise.reject('Contrato no inicializado')
-}
-
-export function denyUser(address) {
-  if (instanceContract !== null) {
-    return instanceContract.methods.denyUser(address).send()
-  }
-  return Promise.reject('Contrato no inicializado')
-}
-*/
 export function get_accounts() {
     return ks.addresses
 }

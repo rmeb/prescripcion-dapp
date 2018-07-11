@@ -8,6 +8,7 @@ import {PRESCRIPTION_SUCCESS, CONFIGURATION} from '../utils/Routes'
 import LoadingButton from '../components/LoadingButton'
 import Prescriptions from '../components/Prescriptions'
 import session from '../lib/Session'
+import {deployContract} from '../lib/Eth'
 
 const $ = window.$
 const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -35,7 +36,7 @@ export default class Dashboard extends Component {
     drugs: [],
     code: '',
     loading: false,
-    selectedDrug: null
+    password: ''
   }
 
   componentDidMount() {
@@ -46,41 +47,44 @@ export default class Dashboard extends Component {
   }
 
   submit = (e) => {
-    e.preventDefault()
     if (this.state.drugs.length === 0) {
       this.onError('Debe agregar medicamentos')
       return
     }
 
-    let {establecimiento, profesional, password} = config.get()
-    let data = {
-      establecimiento, profesional,
-      paciente: {
-        name: this.state.name,
-        document_type: this.state.document_type,
-        document: this.state.document,
-        birthday: this.state.birthday,
-        weight: this.state.weight,
-        size: this.state.size,
-        address: this.state.address,
-        city: this.state.city,
-        phone: this.state.phone
-      },
-      prescriptions: [...this.state.drugs],
-      diagnosis: this.state.diagnosis,
-      pacient_detail: this.state.pacient_detail,
-      farma_detail: this.state.farma_detail,
-      contract: '0x0'
-    }
     let run = session.get_data().rut
     let code = randomString(6)
-    let xml = generateXML(run, data)
     let hash = sha3_256(this.state.document + ':' + code)
 
     this.setState({loading: true})
-    saveRecipe({id: hash, receta: xml, credentials: {run, clave: password}}).then(() => {
-      this.props.history.push(PRESCRIPTION_SUCCESS.replace(':code', code))
-    }).catch(this.onError)
+    deployContract(this.state.drugs, this.state.password).then(contract => {
+      console.log(contract.options.address)
+      let {establecimiento, profesional, password} = config.get()
+      let data = {
+        establecimiento, profesional,
+        paciente: {
+          name: this.state.name,
+          document_type: this.state.document_type,
+          document: this.state.document,
+          birthday: this.state.birthday,
+          weight: this.state.weight,
+          size: this.state.size,
+          address: this.state.address,
+          city: this.state.city,
+          phone: this.state.phone
+        },
+        prescriptions: [...this.state.drugs],
+        diagnosis: this.state.diagnosis,
+        pacient_detail: this.state.pacient_detail,
+        farma_detail: this.state.farma_detail,
+        contract: contract.options.address
+      }
+
+      let xml = generateXML(run, data)
+      return saveRecipe({id: hash, receta: xml, credentials: {run, clave: password}})
+    })
+    .then(() => this.props.history.push(PRESCRIPTION_SUCCESS.replace(':code', code)))
+    .catch(this.onError)
   }
 
   onChange = (e) => {
@@ -234,12 +238,38 @@ export default class Dashboard extends Component {
               </div>
             </div>
           </div>
-          <LoadingButton className="btn btn-primary btn-block mt-3" label="Emitir" loading={this.state.loading}/>
+          <button type="button" className="btn btn-primary btn-block mt-3" data-toggle="modal" data-target="#passwordModal" disabled={this.state.loading}>{this.state.loading ? <i className="fas fa-circle-notch fa-spin"></i> : "Emitir"}</button>
         </form>
+        <RequirePassword onClick={this.submit} password={this.state.password} onChange={this.onChange}/>
       </div>
     );
   }
 }
+
+const RequirePassword = ({onClick, password, onChange}) => (
+  <div className="modal fade" id="passwordModal" tabIndex="-1" role="dialog">
+    <div className="modal-dialog" role="document">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">Requiere Contraseña</h5>
+          <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div className="modal-body">
+          <div className="form-group">
+            <label>Contraseña</label>
+            <input id="password" className="form-control" type="password" value={password} onChange={onChange} />
+          </div>
+        </div>
+        <div className="modal-footer">
+          <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={onClick}>Continuar</button>
+          <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+)
 
 class PrescriptionItem extends Component {
   state = {
