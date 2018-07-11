@@ -1,4 +1,4 @@
-import {DespachoReceta} from 'rmeb-contracts'
+import {DespachoReceta, AllowanceRegistry} from 'rmeb-contracts'
 import {restore_keystore} from './Lightwallet'
 import {signing, txutils} from 'eth-lightwallet'
 const SignerProvider = require('ethjs-provider-signer');
@@ -17,10 +17,8 @@ function signTransaction(rawTx, cb) {
     gasLimit: rawTx.gas,
     data: rawTx.data
   }
-  console.log(rawTx)
   get_derived_key(rawTx.password).then(pwDerivedKey => {
     let contractTx = txutils.createContractTx(rawTx.from, tx)
-    console.log(contractTx)
     let signedTx = signing.signTx(ks, pwDerivedKey, contractTx.tx, rawTx.from)
     cb(null, '0x' + signedTx)
   }).catch(e => cb(e))
@@ -42,22 +40,27 @@ export function deployContract(drugs, password) {
 
   let BN = web3.utils.BN;
 
-  let codes = drugs.map(d => (
+  let _codigoFarmaco = drugs.map(d => (
     web3.utils.toHex(new BN(d.code.toString()).toArray())
   ))
-  let quantity = drugs.map(d => (
+  let _cantidadRecetada = drugs.map(d => (
     web3.utils.toHex(d.dose)
   ))
 
-  console.log(codes, quantity)
+  //TODO pendiente
+  let _registroControlados = '0x0'
 
-  return instanceContract.deploy({
-      data: bytecode,
-      arguments: [codes, quantity, '0x0', '0x0']
-  }).send({
-    from: '0x' + ks.addresses[0],
-    gas: 600000,
-    password
+  return network().then(networkId => {
+    let artifact = AllowanceRegistry.v1;
+    let _registroDespachadores = artifact.networks[networkId].address
+    return instanceContract.deploy({
+        data: bytecode,
+        arguments: [_codigoFarmaco, _cantidadRecetada, _registroControlados, _registroDespachadores]
+    }).send({
+      from: '0x' + ks.addresses[0],
+      gas: 600000,
+      password
+    })
   })
 }
 
@@ -116,7 +119,6 @@ export function from_wei(wei) {
 export function sendTransaction(password, tx) {
   return get_derived_key(password).then(pwDerivedKey => {
     tx.pwDerivedKey = pwDerivedKey
-    console.log('send', pwDerivedKey)
     return web3.eth.sendTransaction(tx)
   })
 }

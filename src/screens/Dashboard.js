@@ -263,8 +263,8 @@ const RequirePassword = ({onClick, password, onChange}) => (
           </div>
         </div>
         <div className="modal-footer">
-          <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={onClick}>Continuar</button>
           <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={onClick}>Continuar</button>
         </div>
       </div>
     </div>
