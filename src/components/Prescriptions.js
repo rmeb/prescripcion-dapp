@@ -9,7 +9,8 @@ const PrescriptionInitialState = {
   drug: null,
   dose: '',
   frequency: '',
-  length: ''
+  length: '',
+  loading: false
 }
 
 export default class Prescriptions extends Component {
@@ -55,10 +56,15 @@ export default class Prescriptions extends Component {
 
   searchDrug = (e) => {
     let filter = e.target.value
-    searchFarmaco(filter).then(result => {
-      this.setState({drugs: result})
-    }).catch(console.error)
-    this.setState({filter})
+    if (filter.trim().length > 0) {
+      this.setState({loading: true})
+      searchFarmaco(filter.toLowerCase()).then(result => {
+        this.setState({drugs: result, loading: false})
+      }).catch(console.error)
+    } else {
+      this.setState({drugs: []})
+    }
+    this.setState({filter, drug: null})
   }
 
   onChange = (e) => {
@@ -87,13 +93,16 @@ export default class Prescriptions extends Component {
             </div>
             <div className="modal-body">
               <input type="text" className="form-control" value={this.state.filter} onChange={this.searchDrug}/>
-              <ul className="list-group">
-                {this.state.drugs.map((d, i) => (
-                  <li key={i} className={"list-group-item cs-pointer" + (d === this.state.drug ? ' active' : '')} onClick={() => this.selectDrug(i)}>
-                    {d.dci}
-                  </li>
-                ))}
-              </ul>
+              {this.state.loading ?
+                <div className="d-flex justify-content-center align-items-center mt-3"><i className="fas fa-circle-notch fa-spin fa-2x"></i></div> :
+                <ul className="list-group">
+                  {this.state.drugs.map((d, i) => (
+                    <li key={i} className={"list-group-item cs-pointer" + (d === this.state.drug ? ' active' : '')} onClick={() => this.selectDrug(i)}>
+                      {d.dci}
+                    </li>
+                  ))}
+                </ul>
+              }
               {this.state.drug === null ? null :
                 <div className="mt-3">
                   <div className="form-row">
