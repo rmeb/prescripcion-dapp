@@ -1,4 +1,4 @@
-import {DespachoReceta, AllowanceRegistry} from 'rmeb-contracts'
+import {DespachoReceta, AllowanceRegistry, RestrictedRegistry} from 'rmeb-contracts'
 import {restore_keystore} from './Lightwallet'
 import {signing, txutils} from 'eth-lightwallet'
 const SignerProvider = require('ethjs-provider-signer');
@@ -47,12 +47,9 @@ export function deployContract(drugs, password) {
     web3.utils.toHex(d.dose)
   ))
 
-  //TODO pendiente
-  let _registroControlados = '0x0'
-
   return network().then(networkId => {
-    let artifact = AllowanceRegistry.v1;
-    let _registroDespachadores = artifact.networks[networkId].address
+    let _registroDespachadores = AllowanceRegistry.v1.networks[networkId].address
+    let _registroControlados = RestrictedRegistry.v1.networks[networkId].address
     return instanceContract.deploy({
         data: bytecode,
         arguments: [_codigoFarmaco, _cantidadRecetada, _registroControlados, _registroDespachadores]
