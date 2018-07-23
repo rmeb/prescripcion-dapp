@@ -38,10 +38,8 @@ export function deployContract(drugs, password) {
   let bytecode = artifact.bytecode;
   let instanceContract = new web3.eth.Contract(abi);
 
-  let BN = web3.utils.BN;
-
   let _codigoFarmaco = drugs.map(d => (
-    web3.utils.toHex(new BN(d.code.toString()).toArray())
+    web3.utils.fromAscii(d.code.toString())
   ))
   let _cantidadRecetada = drugs.map(d => (
     web3.utils.toHex(d.dose)
