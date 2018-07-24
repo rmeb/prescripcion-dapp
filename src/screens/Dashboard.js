@@ -8,7 +8,6 @@ import {PRESCRIPTION_SUCCESS, CONFIGURATION} from '../utils/Routes'
 import Prescriptions from '../components/Prescriptions'
 import session from '../lib/Session'
 import {deployContract, isPasswordValid} from '../lib/Eth'
-//import {isPasswordValid} from  '../lib/Lightwallet'
 
 const $ = window.$
 const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -19,11 +18,15 @@ function randomString(length) {
     return result;
 }
 
+function isEmpty(v) {
+  return !v || v.length === 0
+}
+
 export default class Dashboard extends Component {
   state = {
     name: '',
     document_type: 'RUN',
-    document: '',
+    document_value: '',
     birthday: '',
     address: '',
     weight: '',
@@ -53,7 +56,7 @@ export default class Dashboard extends Component {
 
     let run = session.get_data().rut
     let code = randomString(6)
-    let hash = sha3_256(this.state.document + ':' + code)
+    let hash = sha3_256(this.state.document_value + ':' + code)
 
     this.setState({loading: true})
     deployContract(this.state.drugs, pwd).then(contract => {
@@ -64,7 +67,7 @@ export default class Dashboard extends Component {
         paciente: {
           name: this.state.name,
           document_type: this.state.document_type,
-          document: this.state.document,
+          document: this.state.document_value,
           birthday: this.state.birthday,
           weight: this.state.weight,
           size: this.state.size,
@@ -133,6 +136,15 @@ export default class Dashboard extends Component {
     this.props.onError(e)
   }
 
+  validForm = () => {
+    let {name, document_value, birthday, address, weight, size, city, phone,
+      diagnosis, pacient_detail, farma_detail, drugs} = this.state
+    return !(isEmpty(name) || isEmpty(document_value) || isEmpty(birthday) ||
+      isEmpty(address) || isEmpty(weight) || isEmpty(size) || isEmpty(city) ||
+      isEmpty(phone) || isEmpty(diagnosis) || isEmpty(pacient_detail) || isEmpty(farma_detail)
+      || isEmpty(drugs))
+  }
+
   render() {
     return (
       <div>
@@ -162,8 +174,8 @@ export default class Dashboard extends Component {
                       </select>
                     </div>
                     <div className="form-group col-md-6">
-                      <label htmlFor="document">Documento de identificación</label>
-                      <input type="text" className="form-control" id="document" value={this.state.document} onChange={this.onChange} data-validation={this.state.document_type === 'RUN' ? 'rut' : ''} required/>
+                      <label htmlFor="document_value">Documento de identificación</label>
+                      <input type="text" className="form-control" id="document_value" value={this.state.document_value} onChange={this.onChange} data-validation={this.state.document_type === 'RUN' ? 'rut' : ''} required/>
                       <div className="invalid-feedback">El rut no es valido.</div>
                     </div>
                   </div>
@@ -223,7 +235,6 @@ export default class Dashboard extends Component {
             <div className="col-md-12">
               <div className="card">
                 <div className="card-body">
-                  {/*<h5 className="card-title">Prescripciones <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#prescipcionModal"><i className="far fa-plus"></i></button></h5>*/}
                   <h5 className="card-title">Prescripciones</h5>
                   <ul className="list-group list-group-flush mt-3">
                     {this.state.drugs.map((d, i) => (
@@ -240,7 +251,7 @@ export default class Dashboard extends Component {
               </div>
             </div>
           </div>
-          <button type="button" className="btn btn-primary btn-block mt-3" data-toggle="modal" data-target="#passwordModal" disabled={this.state.loading}>{this.state.loading ? <i className="fas fa-circle-notch fa-spin"></i> : "Emitir"}</button>
+          <button type="button" className="btn btn-primary btn-block mt-3" data-toggle="modal" data-target="#passwordModal" disabled={this.state.loading || !this.validForm()}>{this.state.loading ? <i className="fas fa-circle-notch fa-spin"></i> : "Emitir"}</button>
         </form>
         <RequirePassword onClick={this.submit} />
       </div>
