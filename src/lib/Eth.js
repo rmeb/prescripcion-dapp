@@ -19,8 +19,12 @@ function signTransaction(rawTx, cb) {
   }
   get_derived_key(rawTx.password).then(pwDerivedKey => {
     let contractTx = txutils.createContractTx(rawTx.from, tx)
-    let signedTx = signing.signTx(ks, pwDerivedKey, contractTx.tx, rawTx.from)
-    cb(null, '0x' + signedTx)
+    try {
+      let signedTx = signing.signTx(ks, pwDerivedKey, contractTx.tx, rawTx.from)
+      cb(null, '0x' + signedTx)
+    }catch(e) {
+      cb(e)
+    }
   }).catch(e => cb(e))
 }
 
@@ -74,6 +78,15 @@ function get_derived_key(password) {
     ks.keyFromPassword(password, (e, pwDerivedKey) => {
       if (e) return reject(e)
       resolve(pwDerivedKey)
+    })
+  })
+}
+
+export function isPasswordValid(password) {
+  return new Promise((resolve, reject) => {
+    ks.keyFromPassword(password, (e, pwDerivedKey) => {
+      if (e) return reject(e)
+      resolve(ks.isDerivedKeyCorrect(pwDerivedKey))
     })
   })
 }

@@ -7,7 +7,8 @@ import config from '../lib/Config'
 import {PRESCRIPTION_SUCCESS, CONFIGURATION} from '../utils/Routes'
 import Prescriptions from '../components/Prescriptions'
 import session from '../lib/Session'
-import {deployContract} from '../lib/Eth'
+import {deployContract, isPasswordValid} from '../lib/Eth'
+//import {isPasswordValid} from  '../lib/Lightwallet'
 
 const $ = window.$
 const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -34,8 +35,7 @@ export default class Dashboard extends Component {
     farma_detail: '',
     drugs: [],
     code: '',
-    loading: false,
-    password: ''
+    loading: false
   }
 
   componentDidMount() {
@@ -45,7 +45,7 @@ export default class Dashboard extends Component {
     }
   }
 
-  submit = (e) => {
+  submit = (pwd) => {
     if (this.state.drugs.length === 0) {
       this.onError('Debe agregar medicamentos')
       return
@@ -56,7 +56,7 @@ export default class Dashboard extends Component {
     let hash = sha3_256(this.state.document + ':' + code)
 
     this.setState({loading: true})
-    deployContract(this.state.drugs, this.state.password).then(contract => {
+    deployContract(this.state.drugs, pwd).then(contract => {
       console.log(contract.options.address)
       let {establecimiento, profesional, password} = config.get()
       let data = {
@@ -83,7 +83,10 @@ export default class Dashboard extends Component {
       return saveRecipe({id: hash, receta: xml, credentials: {run, clave: password}})
     })
     .then(() => this.props.history.push(PRESCRIPTION_SUCCESS.replace(':code', code)))
-    .catch(this.onError)
+    .catch(e => {
+      console.log(e)
+      this.onError(e)
+    })
   }
 
   onChange = (e) => {
@@ -239,36 +242,68 @@ export default class Dashboard extends Component {
           </div>
           <button type="button" className="btn btn-primary btn-block mt-3" data-toggle="modal" data-target="#passwordModal" disabled={this.state.loading}>{this.state.loading ? <i className="fas fa-circle-notch fa-spin"></i> : "Emitir"}</button>
         </form>
-        <RequirePassword onClick={this.submit} password={this.state.password} onChange={this.onChange}/>
+        <RequirePassword onClick={this.submit} />
       </div>
     );
   }
 }
 
-const RequirePassword = ({onClick, password, onChange}) => (
-  <div className="modal fade" id="passwordModal" tabIndex="-1" role="dialog">
-    <div className="modal-dialog" role="document">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h5 className="modal-title">Requiere Contraseña</h5>
-          <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div className="modal-body">
-          <div className="form-group">
-            <label>Contraseña</label>
-            <input id="password" className="form-control" type="password" value={password} onChange={onChange} />
+class RequirePassword extends Component  {
+  state = {
+    password: ''
+  }
+
+  onClick = () => {
+    $('#password').removeClass('is-invalid')
+    isPasswordValid(this.state.password).then(valid => {
+      if (valid) {
+        this.props.onClick(this.state.password)
+        $('#passwordModal').modal('toggle')
+        this.setState({password: ''})
+      } else {
+        $('#password').addClass('is-invalid')
+      }
+    }).catch(e => {
+      console.error(e)
+      $('#password').addClass('is-invalid')
+    })
+  }
+
+  onChange = (e) => {
+    let password = e.target.value
+    $('#password').removeClass('is-invalid')
+    this.setState({password})
+  }
+
+  render() {
+    return (
+      <div className="modal fade" id="passwordModal" tabIndex="-1" role="dialog">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Requiere Contraseña</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Contraseña</label>
+                <input id="password" className="form-control" type="password" value={this.state.password} onChange={this.onChange} />
+                <div className="invalid-feedback">Contraseña incorrecta.</div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+              <button type="button" className="btn btn-primary" onClick={this.onClick}>Continuar</button>
+            </div>
           </div>
         </div>
-        <div className="modal-footer">
-          <button type="button" className="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={onClick}>Continuar</button>
-        </div>
       </div>
-    </div>
-  </div>
-)
+    )
+  }
+}
+//} = ({onClick, password, onChange}) => (
 
 class PrescriptionItem extends Component {
   state = {
