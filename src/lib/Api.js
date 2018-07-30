@@ -1,7 +1,5 @@
 const APIURL = 'https://rx-keyserver.herokuapp.com'
-//const APIURL = 'http://192.168.0.25:4000'
-//const RECIPE_API = 'https://servidor-rme-sandbox.herokuapp.com'
-const RECIPE_API = 'http://192.168.0.25:4000'
+const RECIPE_API = 'https://servidor-rme-sandbox.herokuapp.com'
 const FARMA_API = 'https://servidor-farmacos-sandbox.herokuapp.com'
 
 export function save_keystore(rut, body) {
