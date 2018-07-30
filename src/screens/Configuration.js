@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Validations from '../utils/Validations'
 import config from '../lib/Config'
 import session from '../lib/Session'
+import {checkPassword} from '../lib/Api'
 
 const $ = window.$
 
@@ -22,7 +23,9 @@ export default class Configuration extends Component {
     password: '',
     repassword: '',
     show: false,
-    valid: true
+    valid: true,
+    checkingPassword: false,
+    validPassword: false
   }
 
   componentDidMount() {
@@ -43,12 +46,22 @@ export default class Configuration extends Component {
         super_salud: profesional.super_salud,
         colegio: profesional.colegio
       })
+      if (data.password && data.password.length > 0) {
+        this.checkPassword(data)
+      }
     }
+  }
+
+  checkPassword = (data) => {
+    this.setState({password: data.password, repassword: data.password, checkingPassword: true})
+    checkPassword(session.data.rut, data.password)
+      .then(r => this.setState({validPassword: true, checkingPassword: false}))
+      .catch(e => this.setState({validPassword: false, checkingPassword: false}))
   }
 
   submit = (e) => {
     e.preventDefault()
-    config.saveConfig({
+    let data = {
       establecimiento: {
         name: this.state.name,
         deis: this.state.deis,
@@ -66,7 +79,9 @@ export default class Configuration extends Component {
         colegio: this.state.colegio
       },
       password: this.state.password
-    })
+    }
+    config.saveConfig(data)
+    this.checkPassword(data)
     this.setState({show: true})
   }
 
@@ -199,6 +214,10 @@ export default class Configuration extends Component {
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">Servicio de Firma</h5>
+                  <div className="text-center">
+
+                    <Password loading={this.state.checkingPassword} valid={this.state.validPassword}/>
+                  </div>
                   <div className="form-group">
                     <label htmlFor="name">Rut</label>
                     <input className="form-control" value={session.data.rut} disabled/>
@@ -219,6 +238,9 @@ export default class Configuration extends Component {
           {!this.state.show ? null :
             <div className="alert alert-success text-center" role="alert">
               <strong>Información guardada!</strong>
+              <button type="button" className="close" aria-label="Close" onClick={() => this.setState({show: false})}>
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
           }
           <button className="btn btn-primary btn-block" disabled={!this.state.valid}>Guardar</button>
@@ -226,4 +248,10 @@ export default class Configuration extends Component {
       </div>
     )
   }
+}
+
+const Password = ({loading, valid}) => {
+  if (loading) return <i className="fas fa-circle-notch fa-spin fa-2x"></i>
+  if (valid) return <div className="alert alert-success" role="alert">Contraseña correcta!</div>
+  return <div className="alert alert-danger" role="alert">Usuario o contraseña incorrecta!</div>
 }
