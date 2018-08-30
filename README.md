@@ -4,7 +4,7 @@ dApp para prescribir recetas medicas
 ## XML Receta de ejemplo:
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?> 
+<?xml version="1.0" encoding="UTF-8"?>
 <RME>
 	<ESTABLECIMIENTO_SALUD>
 		<NOMBRE/>
@@ -33,8 +33,8 @@ dApp para prescribir recetas medicas
 		<FECHA_NACIMIENTO/> //DD-MM-YYYY
 		<PESO/> //KK.GG
 		<TALLA/> //
-		<DIRECCION/> 
-		<CIUDAD/> 
+		<DIRECCION/>
+		<CIUDAD/>
 		<TELEFONO/>
 	</PACIENTE>
 	<PRESCRIPCIONES>
@@ -53,11 +53,11 @@ dApp para prescribir recetas medicas
 </RME>
 ```
 
-## Servicio de Firma 
+## Servicio de Firma
 
 Una vez armado el XML de la receta, esta se envia a firmar al servicio de firma. Los paramteros requeridos para el servicio de firma son:
 
-| Campo                          | Dato a ingresar        | 
+| Campo                          | Dato a ingresar        |
 |--------------------------------|------------------------|
 | Encabezado.User                | RUT del firmador       |
 | EncabezadoPassword             | Clave del firmador     |
@@ -91,3 +91,7 @@ Ejemplo de llamada:
 Endpoint:
 
 `http://200.111.181.78/SignServerEsign/WSIntercambiaDocSoap?wsdl`
+
+## Usuario de prueba
+Rut: 99551740-K
+Clave: 1234
