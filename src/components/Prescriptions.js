@@ -10,6 +10,7 @@ const PrescriptionInitialState = {
   dose: '',
   frequency: '',
   length: '',
+  error: '',
   loading: false
 }
 
@@ -50,7 +51,11 @@ export default class Prescriptions extends Component {
   selectDrug = (index) => {
     let d = this.state.drugs[index]
     getFarmaco(d.codigo).then(drug => {
-      this.setState({drug, filter: drug.dci, drugs: []})
+      console.log(drug)
+      if (this.props.drugs.find(d => d.code === drug.codigo)) {
+        return this.setState({error: 'El medicamento $name ya esta en la receta'.replace('$name', drug.dci)})
+      }
+      this.setState({drug, filter: drug.dci, drugs: [], error: ''})
     }).catch(console.error)
   }
 
@@ -92,6 +97,7 @@ export default class Prescriptions extends Component {
               </button>
             </div>
             <div className="modal-body">
+              {this.state.error !== '' ? <div className="alert alert-danger">{this.state.error}.</div> : null}
               <input type="text" className="form-control" value={this.state.filter} onChange={this.searchDrug}/>
               {this.state.loading ?
                 <div className="d-flex justify-content-center align-items-center mt-3"><i className="fas fa-circle-notch fa-spin fa-2x"></i></div> :
@@ -126,7 +132,7 @@ export default class Prescriptions extends Component {
               }
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => this.setState(PrescriptionInitialState)}>Cancelar</button>
               <button type="button" className="btn btn-primary" onClick={this.add}>Agregar</button>
             </div>
           </div>

@@ -112,6 +112,12 @@ export default class Dashboard extends Component {
   }
 
   onAdd = (prescription) => {
+    /*console.log(prescription)
+    if (this.state.drugs.find(d => d.code === prescription.code)) {
+      this.setState({error: 'El medicamento ya esta en la receta'})
+    } else {
+      this.setState({drugs: [...this.state.drugs, prescription], error: ''})
+    }*/
     this.setState({drugs: [...this.state.drugs, prescription], error: ''})
   }
 
@@ -246,7 +252,7 @@ export default class Dashboard extends Component {
                       <a href="" data-toggle="modal" data-target="#prescipcionModal">Agregar medicamento.</a>
                     </li>
                   </ul>
-                  <Prescriptions onAdd={this.onAdd}/>
+                  <Prescriptions onAdd={this.onAdd} drugs={this.state.drugs}/>
                 </div>
               </div>
             </div>
