@@ -25,6 +25,8 @@ class App extends Component {
     window.scrollTo(0, 0)
   }
 
+  clearError = () => this.setState({error: ''})
+
   render() {
     return (
       <Router>
@@ -34,11 +36,11 @@ class App extends Component {
           <PrivateRoute path={HEADER} component={Header} />
           <div className="cs-body-margin">
             <PrivateRoute path="/private" component={BatteryPanel} onError={this.onError}/>
-            <PrivateRoute path="/private" component={Error} message={this.state.error} onClick={() => this.setState({error: ''})}/>
-            <PrivateRoute exact path={DASHBOARD} component={Dashboard} onError={this.onError}/>
+            <PrivateRoute path="/private" component={Error} message={this.state.error} onClick={this.clearError}/>
+            <PrivateRoute exact path={DASHBOARD} component={Dashboard} onError={this.onError} clearError={this.clearError}/>
             <PrivateRoute exact path={PRESCRIPTION_SUCCESS} component={PrescriptionSuccess}/>
-            <PrivateRoute exact path={CONFIGURATION} component={Configuration}/>
-            <PrivateRoute exact path={SETTINGS} component={Settings}/>
+            <PrivateRoute exact path={CONFIGURATION} component={Configuration}  clearError={this.clearError}/>
+            <PrivateRoute exact path={SETTINGS} component={Settings}  clearError={this.clearError}/>
           </div>
           <ExitModal onClick={this.logout}/>
         </div>

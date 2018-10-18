@@ -11,6 +11,7 @@ export default class Settings extends Component {
   }
 
   componentDidMount() {
+    this.props.clearError()
     let accounts = get_accounts()
     if (accounts.length > 0) {
       getWeiBalance('0x' + accounts[0]).then(r => {

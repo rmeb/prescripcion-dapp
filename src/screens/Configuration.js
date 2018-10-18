@@ -29,6 +29,7 @@ export default class Configuration extends Component {
   }
 
   componentDidMount() {
+    this.props.clearError()
     let data = config.get()
     if (data !== null) {
       let {establecimiento, profesional} = data
@@ -60,6 +61,7 @@ export default class Configuration extends Component {
   }
 
   submit = (e) => {
+    this.props.clearError()
     e.preventDefault()
     let data = {
       establecimiento: {

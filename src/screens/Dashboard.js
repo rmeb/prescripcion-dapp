@@ -46,9 +46,11 @@ export default class Dashboard extends Component {
     if (!conf || conf === null) {
       this.props.history.push(CONFIGURATION)
     }
+    this.props.clearError()
   }
 
   submit = (pwd) => {
+    this.props.clearError()
     if (this.state.drugs.length === 0) {
       this.onError('Debe agregar medicamentos')
       return
